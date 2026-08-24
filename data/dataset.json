@@ -1,0 +1,857 @@
+{
+  "dataset_version": "0.4.0",
+  "total_crates": 105,
+  "label_counts": {
+    "MALICIOUS": 5,
+    "SUSPICIOUS": 0,
+    "BENIGN": 100
+  },
+  "build_stats": {
+    "advisories_fetched": 73,
+    "resolved": 5,
+    "skipped_no_package_name": 0,
+    "skipped_no_version_found": 68
+  },
+  "crates": [
+    {
+      "name": "append-only-vec",
+      "version": "0.1.8",
+      "label": "MALICIOUS",
+      "label_source": "RUSTSEC-2026-0262",
+      "attack_category": "malicious",
+      "url": "https://blog.rust-lang.org/2026/08/20/supply-chain-attack-on-arrayref"
+    },
+    {
+      "name": "arrayref",
+      "version": "0.3.9",
+      "label": "MALICIOUS",
+      "label_source": "RUSTSEC-2026-0260",
+      "attack_category": "malicious",
+      "url": "https://blog.rust-lang.org/2026/08/20/supply-chain-attack-on-arrayref"
+    },
+    {
+      "name": "bit-flags",
+      "version": "0.1.2",
+      "label": "MALICIOUS",
+      "label_source": "RUSTSEC-2023-0124",
+      "attack_category": "malicious",
+      "url": null
+    },
+    {
+      "name": "internment",
+      "version": "0.8.6",
+      "label": "MALICIOUS",
+      "label_source": "RUSTSEC-2026-0266",
+      "attack_category": "malicious",
+      "url": "https://blog.rust-lang.org/2026/08/20/supply-chain-attack-on-arrayref"
+    },
+    {
+      "name": "onering",
+      "version": "1.4.0",
+      "label": "MALICIOUS",
+      "label_source": "RUSTSEC-2026-0175",
+      "attack_category": "malicious",
+      "url": null
+    },
+    {
+      "name": "hashbrown",
+      "version": "0.17.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/hashbrown"
+    },
+    {
+      "name": "syn",
+      "version": "3.0.3",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/syn"
+    },
+    {
+      "name": "getrandom",
+      "version": "0.4.3",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/getrandom"
+    },
+    {
+      "name": "bitflags",
+      "version": "2.13.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/bitflags"
+    },
+    {
+      "name": "rand_core",
+      "version": "0.10.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/rand_core"
+    },
+    {
+      "name": "rand",
+      "version": "0.10.2",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/rand"
+    },
+    {
+      "name": "libc",
+      "version": "1.0.0-alpha.4",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/libc"
+    },
+    {
+      "name": "quote",
+      "version": "1.0.47",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/quote"
+    },
+    {
+      "name": "proc-macro2",
+      "version": "1.0.107",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/proc-macro2"
+    },
+    {
+      "name": "base64",
+      "version": "0.23.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/base64"
+    },
+    {
+      "name": "windows-sys",
+      "version": "0.61.2",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/windows-sys"
+    },
+    {
+      "name": "indexmap",
+      "version": "2.14.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/indexmap"
+    },
+    {
+      "name": "itertools",
+      "version": "0.15.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/itertools"
+    },
+    {
+      "name": "regex-syntax",
+      "version": "0.8.11",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/regex-syntax"
+    },
+    {
+      "name": "thiserror-impl",
+      "version": "2.0.20",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/thiserror-impl"
+    },
+    {
+      "name": "thiserror",
+      "version": "2.0.20",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/thiserror"
+    },
+    {
+      "name": "cfg-if",
+      "version": "1.0.4",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/cfg-if"
+    },
+    {
+      "name": "memchr",
+      "version": "2.8.3",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/memchr"
+    },
+    {
+      "name": "serde",
+      "version": "1.0.229",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/serde"
+    },
+    {
+      "name": "rand_chacha",
+      "version": "0.10.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/rand_chacha"
+    },
+    {
+      "name": "unicode-ident",
+      "version": "1.0.24",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/unicode-ident"
+    },
+    {
+      "name": "itoa",
+      "version": "1.0.18",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/itoa"
+    },
+    {
+      "name": "serde_derive",
+      "version": "1.0.229",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/serde_derive"
+    },
+    {
+      "name": "autocfg",
+      "version": "1.5.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/autocfg"
+    },
+    {
+      "name": "serde_json",
+      "version": "1.0.151",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/serde_json"
+    },
+    {
+      "name": "heck",
+      "version": "0.5.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/heck"
+    },
+    {
+      "name": "once_cell",
+      "version": "1.21.4",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/once_cell"
+    },
+    {
+      "name": "regex-automata",
+      "version": "0.4.18",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/regex-automata"
+    },
+    {
+      "name": "log",
+      "version": "0.4.34",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/log"
+    },
+    {
+      "name": "cc",
+      "version": "1.4.4",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/cc"
+    },
+    {
+      "name": "socket2",
+      "version": "0.6.5",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/socket2"
+    },
+    {
+      "name": "smallvec",
+      "version": "2.0.0-alpha.12",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/smallvec"
+    },
+    {
+      "name": "regex",
+      "version": "1.13.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/regex"
+    },
+    {
+      "name": "clap",
+      "version": "4.6.6",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/clap"
+    },
+    {
+      "name": "aho-corasick",
+      "version": "1.1.5",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/aho-corasick"
+    },
+    {
+      "name": "ryu",
+      "version": "1.0.23",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/ryu"
+    },
+    {
+      "name": "rustix",
+      "version": "1.1.4",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/rustix"
+    },
+    {
+      "name": "parking_lot_core",
+      "version": "0.9.12",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/parking_lot_core"
+    },
+    {
+      "name": "windows_x86_64_msvc",
+      "version": "0.53.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/windows_x86_64_msvc"
+    },
+    {
+      "name": "parking_lot",
+      "version": "0.12.5",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/parking_lot"
+    },
+    {
+      "name": "strsim",
+      "version": "0.11.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/strsim"
+    },
+    {
+      "name": "linux-raw-sys",
+      "version": "0.12.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/linux-raw-sys"
+    },
+    {
+      "name": "windows_x86_64_gnu",
+      "version": "0.53.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/windows_x86_64_gnu"
+    },
+    {
+      "name": "windows_aarch64_msvc",
+      "version": "0.53.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/windows_aarch64_msvc"
+    },
+    {
+      "name": "windows_i686_msvc",
+      "version": "0.53.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/windows_i686_msvc"
+    },
+    {
+      "name": "digest",
+      "version": "0.11.3",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/digest"
+    },
+    {
+      "name": "windows_i686_gnu",
+      "version": "0.53.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/windows_i686_gnu"
+    },
+    {
+      "name": "windows-targets",
+      "version": "0.53.5",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/windows-targets"
+    },
+    {
+      "name": "bytes",
+      "version": "1.12.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/bytes"
+    },
+    {
+      "name": "mio",
+      "version": "1.2.2",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/mio"
+    },
+    {
+      "name": "block-buffer",
+      "version": "0.12.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/block-buffer"
+    },
+    {
+      "name": "pin-project-lite",
+      "version": "0.2.17",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/pin-project-lite"
+    },
+    {
+      "name": "version_check",
+      "version": "0.9.5",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/version_check"
+    },
+    {
+      "name": "num-traits",
+      "version": "0.2.19",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/num-traits"
+    },
+    {
+      "name": "http",
+      "version": "1.5.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/http"
+    },
+    {
+      "name": "either",
+      "version": "1.18.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/either"
+    },
+    {
+      "name": "windows_aarch64_gnullvm",
+      "version": "0.53.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/windows_aarch64_gnullvm"
+    },
+    {
+      "name": "windows_x86_64_gnullvm",
+      "version": "0.53.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/windows_x86_64_gnullvm"
+    },
+    {
+      "name": "semver",
+      "version": "1.0.28",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/semver"
+    },
+    {
+      "name": "lazy_static",
+      "version": "1.5.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/lazy_static"
+    },
+    {
+      "name": "lock_api",
+      "version": "0.4.14",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/lock_api"
+    },
+    {
+      "name": "tokio",
+      "version": "1.53.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/tokio"
+    },
+    {
+      "name": "idna",
+      "version": "1.1.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/idna"
+    },
+    {
+      "name": "anyhow",
+      "version": "1.0.104",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/anyhow"
+    },
+    {
+      "name": "scopeguard",
+      "version": "1.2.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/scopeguard"
+    },
+    {
+      "name": "sha2",
+      "version": "0.11.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/sha2"
+    },
+    {
+      "name": "hyper",
+      "version": "1.11.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/hyper"
+    },
+    {
+      "name": "cpufeatures",
+      "version": "0.3.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/cpufeatures"
+    },
+    {
+      "name": "slab",
+      "version": "0.4.12",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/slab"
+    },
+    {
+      "name": "rustls",
+      "version": "0.24.0-dev.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/rustls"
+    },
+    {
+      "name": "futures-core",
+      "version": "0.3.34",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/futures-core"
+    },
+    {
+      "name": "crossbeam-utils",
+      "version": "0.8.22",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/crossbeam-utils"
+    },
+    {
+      "name": "time",
+      "version": "0.3.55",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/time"
+    },
+    {
+      "name": "fastrand",
+      "version": "2.5.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/fastrand"
+    },
+    {
+      "name": "miniz_oxide",
+      "version": "0.9.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/miniz_oxide"
+    },
+    {
+      "name": "futures-util",
+      "version": "0.3.34",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/futures-util"
+    },
+    {
+      "name": "toml",
+      "version": "1.1.4+spec-1.1.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/toml"
+    },
+    {
+      "name": "futures-task",
+      "version": "0.3.34",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/futures-task"
+    },
+    {
+      "name": "percent-encoding",
+      "version": "2.3.2",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/percent-encoding"
+    },
+    {
+      "name": "ppv-lite86",
+      "version": "0.2.21",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/ppv-lite86"
+    },
+    {
+      "name": "zerocopy",
+      "version": "0.9.0-alpha.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/zerocopy"
+    },
+    {
+      "name": "generic-array",
+      "version": "1.4.5",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/generic-array"
+    },
+    {
+      "name": "typenum",
+      "version": "1.20.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/typenum"
+    },
+    {
+      "name": "winnow",
+      "version": "1.0.4",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/winnow"
+    },
+    {
+      "name": "url",
+      "version": "2.5.8",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/url"
+    },
+    {
+      "name": "clap_lex",
+      "version": "1.1.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/clap_lex"
+    },
+    {
+      "name": "futures-sink",
+      "version": "0.3.34",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/futures-sink"
+    },
+    {
+      "name": "http-body",
+      "version": "1.1.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/http-body"
+    },
+    {
+      "name": "futures-channel",
+      "version": "0.3.34",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/futures-channel"
+    },
+    {
+      "name": "tracing-core",
+      "version": "0.1.36",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/tracing-core"
+    },
+    {
+      "name": "tracing",
+      "version": "0.1.44",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/tracing"
+    },
+    {
+      "name": "crypto-common",
+      "version": "0.2.2",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/crypto-common"
+    },
+    {
+      "name": "errno",
+      "version": "0.3.14",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/errno"
+    },
+    {
+      "name": "futures-io",
+      "version": "0.3.34",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/futures-io"
+    },
+    {
+      "name": "h2",
+      "version": "0.4.18",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/h2"
+    },
+    {
+      "name": "byteorder",
+      "version": "1.5.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/byteorder"
+    },
+    {
+      "name": "tempfile",
+      "version": "3.27.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/tempfile"
+    },
+    {
+      "name": "toml_edit",
+      "version": "0.25.13+spec-1.1.0",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/toml_edit"
+    },
+    {
+      "name": "equivalent",
+      "version": "1.0.2",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/equivalent"
+    },
+    {
+      "name": "chrono",
+      "version": "0.4.45",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/chrono"
+    }
+  ]
+}

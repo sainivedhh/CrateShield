@@ -1,0 +1,15 @@
+{
+  "total_crates": 2,
+  "crates": [
+    {
+      "name": "serde",
+      "version": "1.0.219",
+      "label": "benign"
+    },
+    {
+      "name": "rustdecimal",
+      "version": "1.0.0",
+      "label": "benign"
+    }
+  ]
+}

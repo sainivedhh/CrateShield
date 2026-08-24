@@ -1,0 +1,67 @@
+{
+  "dataset_version": "0.2.0-mini",
+  "total_crates": 7,
+  "label_counts": {
+    "MALICIOUS": 2,
+    "SUSPICIOUS": 0,
+    "BENIGN": 5
+  },
+  "crates": [
+    {
+      "name": "hashbrown",
+      "version": "0.17.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/hashbrown"
+    },
+    {
+      "name": "syn",
+      "version": "3.0.3",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/syn"
+    },
+    {
+      "name": "getrandom",
+      "version": "0.4.3",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/getrandom"
+    },
+    {
+      "name": "bitflags",
+      "version": "2.13.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/bitflags"
+    },
+    {
+      "name": "rand_core",
+      "version": "0.10.1",
+      "label": "BENIGN",
+      "label_source": "crates.io-top",
+      "attack_category": "none",
+      "url": "https://crates.io/crates/rand_core"
+    },
+    {
+      "name": "acceptxmr-rs",
+      "version": "yanked",
+      "label": "MALICIOUS",
+      "label_source": "RUSTSEC-2023-0115",
+      "attack_category": "malicious",
+      "url": null
+    },
+    {
+      "name": "append-only-vec",
+      "version": "yanked",
+      "label": "MALICIOUS",
+      "label_source": "RUSTSEC-2026-0262",
+      "attack_category": "malicious",
+      "url": "https://blog.rust-lang.org/2026/08/20/supply-chain-attack-on-arrayref"
+    }
+  ]
+}

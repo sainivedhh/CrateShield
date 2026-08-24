@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.idea/
+.vscode/
+*.egg-info/
+dist/
+build/
+data/raw/
+data/extracted/
+data/signals/
+data/results/
+*.crate
+.DS_Store
+
+# React webapp
+webapp/node_modules/
+webapp/dist/

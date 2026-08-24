@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crateshield"
+version = "0.1.0"
+description = "LLM-assisted detection of malicious Rust crates"
+requires-python = ">=3.11"
+readme = "README.md"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+crateshield = "crateshield.__main__:main"

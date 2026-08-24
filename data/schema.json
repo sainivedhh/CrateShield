@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RustDetectSignalSchema",
+  "type": "object",
+  "required": ["crate", "version", "analysis_timestamp", "build_rs", "unsafe_ffi", "proc_macro", "typosquatting", "dependencies", "metadata"],
+  "properties": {
+    "crate": { "type": "string" },
+    "version": { "type": "string" },
+    "analysis_timestamp": { "type": "string", "format": "date-time" },
+    "build_rs": {
+      "type": "object",
+      "properties": {
+        "has_build_rs": { "type": "boolean" },
+        "signals": { "type": "array", "items": { "type": "string" } },
+        "network_calls": { "type": "array", "items": { "type": "string" } },
+        "env_reads": { "type": "array", "items": { "type": "string" } },
+        "sensitive_env_reads": { "type": "array", "items": { "type": "string" } },
+        "file_writes": { "type": "array", "items": { "type": "string" } },
+        "process_spawns": { "type": "array", "items": { "type": "string" } },
+        "flagged_snippets": { "type": "array", "items": { "type": "string" } },
+        "parse_error": { "type": "boolean" }
+      }
+    },
+    "unsafe_ffi": {
+      "type": "object",
+      "properties": {
+        "unsafe_block_count": { "type": "integer" },
+        "unsafe_fn_count": { "type": "integer" },
+        "loc": { "type": "integer" },
+        "unsafe_per_kloc": { "type": "number" },
+        "ffi_declarations": { "type": "array", "items": { "type": "string" } },
+        "syscall_usage": { "type": "array", "items": { "type": "string" } },
+        "parse_error": { "type": "boolean" }
+      }
+    },
+    "proc_macro": {
+      "type": "object",
+      "properties": {
+        "is_proc_macro": { "type": "boolean" },
+        "proc_macro_suspicious_imports": { "type": "array", "items": { "type": "string" } },
+        "proc_macro_consistency_score": { "type": ["number", "null"] }
+      }
+    },
+    "typosquatting": {
+      "type": "object",
+      "properties": {
+        "score": { "type": "number" },
+        "target": { "type": ["string", "null"] },
+        "edit_distance": { "type": ["integer", "null"] },
+        "substitution_pattern": { "type": ["string", "null"] },
+        "target_rank": { "type": ["integer", "null"] },
+        "flagged": { "type": "boolean" }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "count": { "type": "integer" },
+        "dev_dependency_count": { "type": "integer" },
+        "names": { "type": "array", "items": { "type": "string" } },
+        "suspicious": { "type": "array", "items": { "type": "string" } },
+        "pinned": { "type": "boolean" },
+        "dependency_purpose_consistency": { "type": ["number", "null"] }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "authors": { "type": ["string", "null"] },
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "repository": { "type": ["string", "null"] },
+        "has_build_rs": { "type": "boolean" }
+      }
+    }
+  }
+}
