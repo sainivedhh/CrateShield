@@ -24,6 +24,10 @@ def main() -> None:
     r = sub.add_parser("ingest-rustsec", help="pull malicious and benign crates into dataset")
     r.add_argument("--out", default=str(WORK_DIR / "dataset.json"))
 
+    syn = sub.add_parser("generate-synthetic", help="Generate synthetic malicious crates and add them to dataset.json")
+    syn.add_argument("--count", type=int, default=50, help="Number of synthetic crates to generate")
+    syn.add_argument("--dataset", default=str(WORK_DIR / "dataset.json"))
+
     x = sub.add_parser("extract-dataset", help="run signal extraction for every crate in a dataset.json (required before train)")
     x.add_argument("--dataset", default=str(WORK_DIR / "dataset.json"))
 
@@ -58,6 +62,42 @@ def main() -> None:
         from crateshield.ingestion.rustsec import build_full_dataset
         ds = build_full_dataset(Path(args.out))
         print(f"Wrote {ds['total_crates']} crates ({ds['label_counts']['MALICIOUS']} Malicious, {ds['label_counts']['BENIGN']} Benign) to {args.out}")
+    elif args.cmd == "generate-synthetic":
+        from crateshield.ingestion.synthetic import generate_synthetic_crates, SYNTHETIC_DIR
+        from crateshield.pipeline import extract_local_crate
+        
+        # 1. Generate crates
+        generate_synthetic_crates(args.count)
+        
+        # 2. Extract signals
+        dataset_path = Path(args.dataset)
+        dataset = json.loads(dataset_path.read_text(encoding="utf-8")) if dataset_path.exists() else {"crates": [], "label_counts": {"MALICIOUS": 0, "BENIGN": 0}}
+        
+        ok = 0
+        for i in range(1, args.count + 1):
+            crate_name = f"syn_malicious_{i}"
+            crate_dir = SYNTHETIC_DIR / crate_name
+            try:
+                extract_local_crate(crate_dir, crate_name)
+                # Add to dataset (avoid duplicates if re-running)
+                if not any(c["name"] == crate_name for c in dataset.get("crates", [])):
+                    dataset.setdefault("crates", []).append({
+                        "name": crate_name,
+                        "version": "0.1.0",
+                        "label": "MALICIOUS",
+                        "label_source": "synthetic-generator",
+                        "attack_category": "synthetic",
+                        "url": "local"
+                    })
+                    dataset.setdefault("label_counts", {}).setdefault("MALICIOUS", 0)
+                    dataset["label_counts"]["MALICIOUS"] += 1
+                ok += 1
+            except Exception as e:
+                print(f"Failed to extract {crate_name}: {e}")
+                
+        dataset["total_crates"] = len(dataset.get("crates", []))
+        dataset_path.write_text(json.dumps(dataset, indent=2), encoding="utf-8")
+        print(f"Extracted and added {ok} synthetic crates to {args.dataset}")
     elif args.cmd == "extract-dataset":
         from crateshield.pipeline import extract_only
         dataset = json.loads(Path(args.dataset).read_text(encoding="utf-8"))

@@ -23,6 +23,17 @@ def extract_only(name: str, version: str, work_dir: Path | None = None) -> dict:
     out = SIGNALS_DIR / f"{name}-{version}.json"
     out.write_text(json.dumps(signals, indent=2), encoding="utf-8")
     logger.info("Wrote %s", out)
+    logger.info("Wrote %s", out)
+    return signals
+
+
+def extract_local_crate(crate_dir: Path, name: str) -> dict:
+    """Extract signals from a pre-existing local directory (used for synthetic crates)."""
+    ensure_dirs()
+    signals = extract_all_signals(name, "0.1.0", crate_dir)
+    out = SIGNALS_DIR / f"{name}-0.1.0.json"
+    out.write_text(json.dumps(signals, indent=2), encoding="utf-8")
+    logger.info("Wrote local signals to %s", out)
     return signals
 
 

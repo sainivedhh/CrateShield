@@ -226,10 +226,25 @@ def fetch_malicious_advisories(session: requests.Session | None = None) -> list[
                 adv["categories"] = list(combined_tags & malicious_tags)
                 out.append(adv)
                 logger.info("Labeled Malicious %s (%s)", adv.get("package"), adv.get("id"))
+                
+    # Inject missing August 2026 malicious crates (hard ceiling workaround)
+    aug_2026 = ["proc-macro1", "proc-macro-en", "aovine", "arone", "aronenao", "tinymember"]
+    existing = {a.get("package") for a in out}
+    for crate in aug_2026:
+        if crate not in existing:
+            out.append({
+                "package": crate,
+                "id": "AUG-2026-MANUAL",
+                "categories": ["malicious", "manual-injection"],
+                "url": f"https://crates.io/crates/{crate}",
+                "versions": {"patched": []} # Will trigger fallback to 0.1.0 or yanked
+            })
+            logger.info("Labeled Malicious (Manual Inject) %s", crate)
+
     return out
 
 
-def fetch_benign_crates(session: requests.Session | None = None, count: int = 100) -> list[dict]:
+def fetch_benign_crates(session: requests.Session | None = None, count: int = 300) -> list[dict]:
     s = session or _session()
     url = "https://crates.io/api/v1/crates"
     crates = []
@@ -255,7 +270,7 @@ def fetch_benign_crates(session: requests.Session | None = None, count: int = 10
 def build_full_dataset(dest: Path) -> dict:
     s = _session()
     malicious = fetch_malicious_advisories(s)
-    benign = fetch_benign_crates(s, count=100)
+    benign = fetch_benign_crates(s, count=300)
 
     crates = []
     skipped_no_name = 0

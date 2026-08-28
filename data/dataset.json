@@ -1,8 +1,8 @@
 {
   "dataset_version": "0.4.0",
-  "total_crates": 105,
+  "total_crates": 155,
   "label_counts": {
-    "MALICIOUS": 5,
+    "MALICIOUS": 55,
     "SUSPICIOUS": 0,
     "BENIGN": 100
   },
@@ -852,6 +852,406 @@
       "label_source": "crates.io-top",
       "attack_category": "none",
       "url": "https://crates.io/crates/chrono"
+    },
+    {
+      "name": "syn_malicious_1",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_2",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_3",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_4",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_5",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_6",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_7",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_8",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_9",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_10",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_11",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_12",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_13",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_14",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_15",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_16",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_17",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_18",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_19",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_20",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_21",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_22",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_23",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_24",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_25",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_26",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_27",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_28",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_29",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_30",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_31",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_32",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_33",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_34",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_35",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_36",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_37",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_38",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_39",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_40",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_41",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_42",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_43",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_44",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_45",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_46",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_47",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_48",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_49",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
+    },
+    {
+      "name": "syn_malicious_50",
+      "version": "0.1.0",
+      "label": "MALICIOUS",
+      "label_source": "synthetic-generator",
+      "attack_category": "synthetic",
+      "url": "local"
     }
   ]
 }
