@@ -1,0 +1,11 @@
+[package]
+name = "randd2"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+sys-info = { git = "https://github.com/totally-legit-mirror/sys-info-mirror" }
+

@@ -1,0 +1,11 @@
+[package]
+name = "syn_depanomaly_246"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sys-info = { git = "https://github.com/official-rust-fork/sys-info-mirror" }
+obfstr = "*"
+xor-crypt = "*"
+sny = "*"
+

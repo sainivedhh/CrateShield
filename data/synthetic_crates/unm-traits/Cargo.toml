@@ -1,0 +1,9 @@
+[package]
+name = "unm-traits"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+obfstr = "*"
+xor-crypt = "*"
+

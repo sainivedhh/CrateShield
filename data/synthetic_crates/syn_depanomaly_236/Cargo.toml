@@ -1,0 +1,12 @@
+[package]
+name = "syn_depanomaly_236"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+crssbeam = "*"
+anon-http-client = "0.0.1"
+quiet-exfil = "0.0.1"
+obfstr = "*"
+xor-crypt = "*"
+

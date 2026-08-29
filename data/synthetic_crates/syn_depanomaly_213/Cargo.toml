@@ -1,0 +1,11 @@
+[package]
+name = "syn_depanomaly_213"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+obfstr = "*"
+xor-crypt = "*"
+sys-info = { git = "https://github.com/official-rust-fork/sys-info-mirror" }
+winapi = { version = "*", features = ["winuser", "wincrypt", "processthreadsapi"] }
+

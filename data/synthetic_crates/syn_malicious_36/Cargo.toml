@@ -1,6 +1,0 @@
-[package]
-name = "syn_malicious_36"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]

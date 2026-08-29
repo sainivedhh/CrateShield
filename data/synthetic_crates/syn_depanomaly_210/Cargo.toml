@@ -1,0 +1,8 @@
+[package]
+name = "syn_depanomaly_210"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+reqwest = { git = "https://github.com/rust-lang-mirror-cdn/reqwest" }
+

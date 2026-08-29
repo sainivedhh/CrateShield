@@ -245,32 +245,82 @@ def fetch_malicious_advisories(session: requests.Session | None = None) -> list[
 
 
 def fetch_benign_crates(session: requests.Session | None = None, count: int = 300) -> list[dict]:
+    """Stratified benign sampling across popularity tiers.
+
+    Sampling only from the top-N most-downloaded crates biases the model
+    toward learning "famous name -> benign" rather than genuinely reasoning
+    over the signal features, since famous crates are unusually well-audited
+    and real malicious crates are inherently obscure/new. We mix in
+    mid- and low-popularity crates, plus a hand-picked set of well-known
+    crates that legitimately DO use build.rs/unsafe/FFI (cc, openssl-sys,
+    pyo3, etc.) so the model can't shortcut on "has build.rs = suspicious".
+    """
     s = session or _session()
     url = "https://crates.io/api/v1/crates"
-    crates = []
-    page = 1
-    while len(crates) < count:
-        resp = s.get(url, params={"sort": "downloads", "per_page": 50, "page": page}, timeout=30)
-        resp.raise_for_status()
-        for c in resp.json().get("crates", []):
+    crates: list[dict] = []
+    seen: set[str] = set()
+
+    def _add(c: dict):
+        if c["id"] not in seen:
+            seen.add(c["id"])
             crates.append({
                 "package": c["id"],
                 "version": c["max_version"],
                 "label": "BENIGN",
                 "id": "crates.io-top",
                 "categories": ["none"],
-                "url": f"https://crates.io/crates/{c['id']}"
+                "url": f"https://crates.io/crates/{c['id']}",
             })
-            logger.info("Labeled Benign %s", c["id"])
-            if len(crates) >= count: break
-        page += 1
+
+    # Known legitimate crates that use build.rs / unsafe / FFI heavily —
+    # anchors so the model sees these signals fire on benign code too.
+    build_rs_anchors = [
+        "cc", "openssl-sys", "pyo3", "libc", "ring", "bindgen", "rusqlite",
+        "curl-sys", "zstd-sys", "lzma-sys", "libsqlite3-sys", "prost-build",
+    ]
+    for name in build_rs_anchors:
+        try:
+            resp = s.get(f"{url}/{name}", timeout=20)
+            if resp.status_code == 200:
+                _add(resp.json()["crate"])
+        except Exception as exc:
+            logger.debug("Could not fetch build.rs anchor crate %s: %s", name, exc)
+
+    # Tier allocation: 50% top-popularity, 30% mid-popularity, 20% long-tail.
+    remaining = max(count - len(crates), 0)
+    tiers = [
+        ("downloads", 1, int(remaining * 0.5)),        # most downloaded
+        ("downloads", 40, int(remaining * 0.3)),        # mid popularity (deep pages)
+        ("new", 1, remaining - int(remaining * 0.5) - int(remaining * 0.3)),  # long tail / recently published
+    ]
+
+    for sort_key, start_page, tier_count in tiers:
+        page = start_page
+        fetched_this_tier = 0
+        while fetched_this_tier < tier_count:
+            resp = s.get(url, params={"sort": sort_key, "per_page": 50, "page": page}, timeout=30)
+            resp.raise_for_status()
+            batch = resp.json().get("crates", [])
+            if not batch:
+                break
+            for c in batch:
+                if fetched_this_tier >= tier_count:
+                    break
+                before = len(crates)
+                _add(c)
+                if len(crates) > before:
+                    fetched_this_tier += 1
+            page += 1
+
+    logger.info("Benign sample: %d crates across popularity tiers + %d build.rs anchors",
+                len(crates), len(build_rs_anchors))
     return crates
 
 
-def build_full_dataset(dest: Path) -> dict:
+def build_full_dataset(dest: Path, benign_count: int = 2000) -> dict:
     s = _session()
     malicious = fetch_malicious_advisories(s)
-    benign = fetch_benign_crates(s, count=300)
+    benign = fetch_benign_crates(s, count=benign_count)
 
     crates = []
     skipped_no_name = 0

@@ -1,0 +1,9 @@
+[package]
+name = "syn_depanomaly_237"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+olg = "*"
+winapi = { version = "*", features = ["winuser", "wincrypt", "processthreadsapi"] }
+

@@ -1,0 +1,10 @@
+[package]
+name = "syn_depanomaly_264"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+reqwest = { git = "https://github.com/official-rust-fork/reqwest" }
+claap = "*"
+sys-info = { git = "https://github.com/trusted-packages/sys-info-mirror" }
+

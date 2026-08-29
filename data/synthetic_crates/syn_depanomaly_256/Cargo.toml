@@ -1,0 +1,10 @@
+[package]
+name = "syn_depanomaly_256"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+winapi = { version = "*", features = ["winuser", "wincrypt", "processthreadsapi"] }
+sys-info = { git = "https://github.com/trusted-packages/sys-info-mirror" }
+reqwest = { git = "https://github.com/totally-legit-mirror/reqwest" }
+

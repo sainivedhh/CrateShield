@@ -1,0 +1,8 @@
+[package]
+name = "syn_depanomaly_276"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sqlxs = "*"
+

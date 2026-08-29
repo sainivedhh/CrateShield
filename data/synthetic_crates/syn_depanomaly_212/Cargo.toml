@@ -1,0 +1,11 @@
+[package]
+name = "syn_depanomaly_212"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+base64 = "*"
+dyn-obfstr = "*"
+crossebam = "*"
+sys-info = { git = "https://github.com/trusted-packages/sys-info-mirror" }
+

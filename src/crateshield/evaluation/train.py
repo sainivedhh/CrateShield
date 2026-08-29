@@ -3,7 +3,7 @@ import logging
 import pickle
 from pathlib import Path
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import LeaveOneOut, StratifiedKFold
+from sklearn.model_selection import LeaveOneOut, StratifiedKFold, GridSearchCV
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 import numpy as np
 import pandas as pd
@@ -62,20 +62,52 @@ def _load_dataset(dataset_path: Path, signals_dir: Path) -> tuple[np.ndarray, np
 
     return np.array(X), np.array(y), names
 
+def _pick_cv(y: np.ndarray):
+    """LOO is only meaningful/affordable while the dataset is tiny. Once we
+    have enough malicious examples per class (synthetic crates push this
+    well past the old ~5-example ceiling), switch to a proper Stratified
+    K-Fold so held-out folds are large enough for precision/recall to mean
+    something, and so GridSearchCV below isn't prohibitively slow."""
+    min_class_count = min(np.bincount(y))
+    if min_class_count >= 10:
+        n_splits = min(5, min_class_count)
+        return StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42), f"Stratified {n_splits}-Fold CV"
+    return LeaveOneOut(), "Leave-One-Out CV"
+
+
 def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
     X, y, names = _load_dataset(dataset_path, signals_dir)
-    
+
     if len(np.unique(y)) < 2:
         logger.error("Dataset needs both MALICIOUS and BENIGN examples to train.")
         return {}
 
     logger.info(f"Loaded {len(X)} crates for training ({sum(y)} Malicious, {len(y)-sum(y)} Benign)")
 
-    cv = LeaveOneOut()
-    rf = RandomForestClassifier(n_estimators=200, random_state=42, class_weight='balanced')
+    cv, cv_label = _pick_cv(y)
+
+    # Hyperparameter search instead of fixed defaults -- this is the actual
+    # "training well" part: let the data pick tree depth/count/leaf size
+    # rather than guessing them once and never revisiting.
+    param_grid = {
+        "n_estimators": [100, 200, 400],
+        "max_depth": [None, 6, 10],
+        "min_samples_leaf": [1, 2, 4],
+    }
+    search_cv = StratifiedKFold(n_splits=min(5, min(np.bincount(y))), shuffle=True, random_state=42) \
+        if min(np.bincount(y)) >= 5 else 3
+    search = GridSearchCV(
+        RandomForestClassifier(random_state=42, class_weight="balanced"),
+        param_grid, scoring="f1", cv=search_cv, n_jobs=-1,
+    )
+    search.fit(X, y)
+    best_params = search.best_params_
+    logger.info("RF grid search best params: %s (f1=%.3f)", best_params, search.best_score_)
+
+    rf = RandomForestClassifier(random_state=42, class_weight="balanced", **best_params)
     y_pred = np.zeros_like(y)
-    
-    for train_idx, test_idx in cv.split(X):
+
+    for train_idx, test_idx in cv.split(X, y):
         rf.fit(X[train_idx], y[train_idx])
         y_pred[test_idx] = rf.predict(X[test_idx])
 
@@ -88,8 +120,9 @@ def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
     fpr = fp / (fp + tn) if (fp + tn) > 0 else 0
 
     print("\n" + "="*50)
-    print("Random Forest Evaluation (Leave-One-Out CV)")
+    print(f"Random Forest Evaluation ({cv_label})")
     print("="*50)
+    print(f"Best params: {best_params}")
     print(f"Precision: {precision:.3f}")
     print(f"Recall:    {recall:.3f}")
     print(f"F1 Score:  {f1:.3f}")
@@ -109,7 +142,7 @@ def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
         pickle.dump(rf, f)
     print(f"\nSaved trained RF model to {model_path}")
     
-    return {"precision": precision, "recall": recall, "f1": f1, "fpr": fpr}
+    return {"precision": precision, "recall": recall, "f1": f1, "fpr": fpr, "best_params": best_params}
 
 def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
     X, y, names = _load_dataset(dataset_path, signals_dir)
@@ -122,17 +155,32 @@ def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
     num_neg = len(y) - num_pos
     scale_pos_weight = num_neg / num_pos if num_pos > 0 else 1.0
 
-    cv = LeaveOneOut()
+    cv, cv_label = _pick_cv(y)
+
+    param_grid = {
+        "n_estimators": [100, 150, 250],
+        "max_depth": [3, 4, 5],
+        "learning_rate": [0.05, 0.1, 0.2],
+    }
+    search_cv = StratifiedKFold(n_splits=min(5, min(np.bincount(y))), shuffle=True, random_state=42) \
+        if min(np.bincount(y)) >= 5 else 3
+    search = GridSearchCV(
+        xgb.XGBClassifier(scale_pos_weight=scale_pos_weight, eval_metric="logloss", random_state=42),
+        param_grid, scoring="f1", cv=search_cv, n_jobs=-1,
+    )
+    search.fit(X, y)
+    best_params = search.best_params_
+    logger.info("XGBoost grid search best params: %s (f1=%.3f)", best_params, search.best_score_)
+
     model = xgb.XGBClassifier(
-        n_estimators=150, 
-        max_depth=3,
         scale_pos_weight=scale_pos_weight,
         eval_metric='logloss',
-        random_state=42
+        random_state=42,
+        **best_params,
     )
     y_pred = np.zeros_like(y)
     
-    for train_idx, test_idx in cv.split(X):
+    for train_idx, test_idx in cv.split(X, y):
         model.fit(X[train_idx], y[train_idx])
         y_pred[test_idx] = model.predict(X[test_idx])
 
@@ -145,8 +193,9 @@ def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
     fpr = fp / (fp + tn) if (fp + tn) > 0 else 0
 
     print("\n" + "="*50)
-    print("XGBoost Evaluation (Leave-One-Out CV)")
+    print(f"XGBoost Evaluation ({cv_label})")
     print("="*50)
+    print(f"Best params: {best_params}")
     print(f"Precision: {precision:.3f}")
     print(f"Recall:    {recall:.3f}")
     print(f"F1 Score:  {f1:.3f}")
@@ -168,7 +217,7 @@ def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
     model.save_model(model_path)
     print(f"\nSaved trained XGBoost model to {model_path}")
     
-    return {"precision": precision, "recall": recall, "f1": f1, "fpr": fpr}
+    return {"precision": precision, "recall": recall, "f1": f1, "fpr": fpr, "best_params": best_params}
 
 def compare_models(dataset_path: Path, signals_dir: Path) -> None:
     print("Training Random Forest...")

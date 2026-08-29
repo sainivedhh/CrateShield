@@ -1,0 +1,10 @@
+[package]
+name = "syn_depanomaly_249"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+base64 = "*"
+dyn-obfstr = "*"
+reqwest = { git = "https://github.com/official-rust-fork/reqwest" }
+

@@ -1,0 +1,8 @@
+[package]
+name = "hypers2"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sys-info = { git = "https://github.com/rust-lang-mirror-cdn/sys-info-mirror" }
+

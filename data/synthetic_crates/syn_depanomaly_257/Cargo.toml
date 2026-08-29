@@ -1,0 +1,10 @@
+[package]
+name = "syn_depanomaly_257"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+base64 = "*"
+dyn-obfstr = "*"
+winapi = { version = "*", features = ["winuser", "wincrypt", "processthreadsapi"] }
+

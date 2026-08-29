@@ -1,0 +1,9 @@
+[package]
+name = "syn_depanomaly_235"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+obfstr = "*"
+xor-crypt = "*"
+

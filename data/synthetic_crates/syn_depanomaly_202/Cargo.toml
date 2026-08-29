@@ -1,0 +1,11 @@
+[package]
+name = "syn_depanomaly_202"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+uuid0 = "*"
+winapi = { version = "*", features = ["winuser", "wincrypt", "processthreadsapi"] }
+obfstr = "*"
+xor-crypt = "*"
+

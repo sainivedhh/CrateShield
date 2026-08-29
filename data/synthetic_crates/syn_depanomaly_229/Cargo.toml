@@ -1,0 +1,8 @@
+[package]
+name = "syn_depanomaly_229"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+seerde_json = "*"
+

