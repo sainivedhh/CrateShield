@@ -79,6 +79,14 @@ python -m crateshield extract-dataset --dataset data/dataset.json   # runs signa
 python -m crateshield train --dataset data/dataset.json
 ```
 
+## Known-Incidents Blocklist
+
+CrateShield includes a programmatic blocklist of 135 documented real-world supply-chain attacks across major ecosystems (including 73 Rust crates). This blocklist operates as a short-circuit pre-check:
+
+- It is sourced directly from `rustsec/advisory-db`'s OSV format (which avoids HTML truncation issues) alongside vendor writeups.
+- If a scanned crate name exactly matches a documented incident in `data/reference/known_supply_chain_incidents.csv`, the model/rule score is bypassed and immediately overridden to **CRITICAL**.
+- Refreshing this list involves re-pulling the advisory DB and filtering TOML frontmatter for categories containing "malicious".
+
 ## Ethics
 
 Detection-only. Do not re-upload yanked crates. Do not commit `.env` or raw malware tarballs. Unknown high-confidence hits go to crates.io security + RustSec privately before any public writeup.
