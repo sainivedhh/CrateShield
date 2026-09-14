@@ -5,6 +5,7 @@ from pathlib import Path
 
 from crateshield.config import RESULTS_DIR
 from crateshield.evaluation.train import extract_features
+from crateshield.ingestion.known_incidents import check_known_incident
 
 FEATURE_NAMES = [
     "has_build_rs", "build_network", "build_env", "build_spawn",
@@ -68,6 +69,9 @@ def _risk_level(score: float) -> str:
 def assess_risk(signal: dict) -> dict:
     """Combine the trained RandomForest model (if available) with a transparent
     rule-based score. Always returns a result, even with no trained model."""
+    crate_name = signal.get("crate") or signal.get("metadata", {}).get("name", "")
+    known = check_known_incident(crate_name) if crate_name else None
+
     rule_score, contributions = _rule_based_score(signal)
 
     model_result = None
@@ -95,10 +99,25 @@ def assess_risk(signal: dict) -> dict:
         if model_result else rule_score
     )
 
-    return {
+    result = {
         "risk_score": final_score,
         "risk_level": _risk_level(final_score),
         "source": "model+rules" if model_result else "rules-only (train the model for higher accuracy)",
         "rule_based": {"score": rule_score, "contributions": contributions},
         "model": model_result,
+        "known_incident": None,
     }
+
+    if known:
+        result["risk_score"] = 1.0
+        result["risk_level"] = "CRITICAL"
+        result["source"] = "known-incident match (overrides model/rules)"
+        result["known_incident"] = {
+            "ecosystem": known.get("ecosystem"),
+            "attack_category": known.get("attack_category"),
+            "technical_mechanism": known.get("technical_mechanism"),
+            "source": known.get("source"),
+            "registry_status": known.get("registry_status_verified") or known.get("registry_status_reported"),
+        }
+
+    return result
