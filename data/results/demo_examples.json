@@ -1,0 +1,43 @@
+{
+  "benign_example": {
+    "crate": "serde",
+    "version": "1.0.197",
+    "risk": {
+      "level": "LOW",
+      "score": 0.05,
+      "factors": ["Widely used and trusted crate", "No suspicious build.rs activity detected"],
+      "model": {
+        "malicious_probability": 0.02,
+        "feature_importances": [
+          {"feature": "downloads", "importance": 0.8},
+          {"feature": "network_access", "importance": 0.1}
+        ]
+      }
+    },
+    "signals": {
+      "typosquat": {"risk": "LOW", "details": "Matches exact package name"},
+      "build_rs": {"risk": "LOW", "details": "No build.rs found"},
+      "macro": {"risk": "LOW", "details": "Standard macro usage"}
+    }
+  },
+  "malicious_example": {
+    "crate": "rust-decimal-macros", 
+    "version": "1.33.1",
+    "risk": {
+      "level": "CRITICAL",
+      "score": 1.0,
+      "factors": ["Blocklist Match: Crate is known to be malicious (rust-decimal-macros is a known typosquat/malicious package from incidents)"],
+      "model": {
+        "malicious_probability": 0.99,
+        "feature_importances": [
+          {"feature": "blocklist_match", "importance": 0.95},
+          {"feature": "typosquat_distance", "importance": 0.05}
+        ]
+      }
+    },
+    "signals": {
+      "typosquat": {"risk": "HIGH", "details": "Highly similar to rust_decimal_macros"},
+      "build_rs": {"risk": "HIGH", "details": "Suspicious network call in build.rs"}
+    }
+  }
+}
