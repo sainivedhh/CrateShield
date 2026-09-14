@@ -156,6 +156,13 @@ function Result({ predict, meta, rawOpen, setRawOpen }) {
           <LevelBadge level={risk.risk_level} />
           <div className="desc">{meta?.description || ''}</div>
           <div className="source-note">scoring source: {risk.source}</div>
+          {risk.known_incident && (
+            <div className="known-incident-banner">
+              ⚠ Documented incident — {risk.known_incident.ecosystem} · {risk.known_incident.attack_category}<br/>
+              {risk.known_incident.technical_mechanism}<br/>
+              <em>{risk.known_incident.source}</em>
+            </div>
+          )}
         </div>
       </div>
 

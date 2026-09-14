@@ -116,3 +116,19 @@ pre.raw-json{margin-top:12px;background:#0d1014;border:1px solid var(--line);bor
 footer{margin-top:60px;color:#4d5661;font-size:11px;text-align:center;}
 
 a.reg-link{color:var(--accent);text-decoration:none;}
+ 
+.known-incident-banner {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--critical) 12%, transparent);
+  border: 1px solid var(--critical);
+  color: #ffb4b4;
+  font-size: 12px;
+  line-height: 1.6;
+  max-width: 52ch;
+}
+.known-incident-banner em {
+  color: var(--muted);
+  font-style: normal;
+}
