@@ -16,7 +16,7 @@ app = FastAPI(title="CrateShield API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -43,10 +43,17 @@ def get_ablation():
     return json.loads(res_path.read_text(encoding="utf-8"))
 
 
+import re
+
+def is_valid_crate_name(name: str) -> bool:
+    return bool(re.match(r"^[a-zA-Z0-9_-]+$", name))
+
 @app.get("/api/crate/{name}")
 def get_crate_metadata(name: str):
     """Basic crates.io metadata lookup — used by the frontend to resolve the
     latest version and show registry info (downloads, description, repo)."""
+    if not is_valid_crate_name(name):
+        raise HTTPException(status_code=400, detail="Invalid crate name")
     try:
         meta = fetch_crate_metadata(name)
     except Exception as exc:
@@ -73,6 +80,8 @@ def predict(name: str, version: str | None = None):
     """Full analysis for one crate: resolves latest version if not given,
     extracts all five signal families, and returns a risk score/level plus
     the full signal breakdown for the UI to render."""
+    if not is_valid_crate_name(name):
+        raise HTTPException(status_code=400, detail="Invalid crate name")
     ensure_dirs()
     from crateshield.pipeline import extract_only
     from crateshield.evaluation.risk import assess_risk
@@ -154,7 +163,15 @@ def run_command(req: RunRequest):
     if req.command not in allowed_commands:
         raise HTTPException(status_code=400, detail="Invalid command")
     try:
-        subprocess.Popen([sys.executable, "-m", "crateshield", req.command], cwd=str(ROOT))
+        if req.command == "ingest-rustsec":
+            from crateshield.ingestion.rustsec import main as ingest_main
+            ingest_main()
+        elif req.command == "ablation":
+            from crateshield.evaluation.ablation import main as ablation_main
+            ablation_main()
+        elif req.command == "train":
+            from crateshield.evaluation.train import train_xgboost
+            train_xgboost()
         return {"status": "started", "command": req.command}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
