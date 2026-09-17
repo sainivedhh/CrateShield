@@ -7,13 +7,22 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+
+# Data and results
 data/raw/
 data/extracted/
 data/signals/
-data/results/
+data/results/*.json
+!data/results/.gitkeep
 *.crate
 .DS_Store
 
-# React webapp
+# Models
+models/*.joblib
+models/*.pkl
+results/*.json
+
+# Node/React
+node_modules/
 webapp/node_modules/
 webapp/dist/

@@ -11,24 +11,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
-    - name: Set up Python
+
+    - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-        
+        cache: 'pip'
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip install -e .
         pip install pytest pytest-cov
-        
-    - name: Run tests with coverage
+
+    - name: Run tests with coverage (skipping LLM tests)
       env:
         PYTHONPATH: src
       run: |
-        pytest --cov=crateshield --cov-report=xml --cov-report=term-missing > pytest-coverage.txt
-        
+        pytest -m "not llm" --cov=crateshield --cov-report=xml --cov-report=term-missing > pytest-coverage.txt
+
     - name: Coverage Summary Report
       if: always()
       run: |

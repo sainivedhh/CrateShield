@@ -1,4 +1,5 @@
 # CrateShield
+[![CI](https://github.com/sainivedhh/CrateShield/actions/workflows/ci.yml/badge.svg)](https://github.com/sainivedhh/CrateShield/actions/workflows/ci.yml)
 
 LLM-assisted detection of malicious Rust crates via structured static signal extraction.
 
@@ -94,3 +95,12 @@ Detection-only. Do not re-upload yanked crates. Do not commit `.env` or raw malw
 ## License
 
 Code: MIT. Dataset (when released): CC-BY-4.0.
+
+## Continuous Integration
+
+CrateShield uses GitHub Actions for continuous integration. On every push and PR to the `main` branch, the CI pipeline:
+- Installs dependencies and the package.
+- Runs the test suite using `pytest` and measures code coverage.
+- Marks LLM-dependent tests with `@pytest.mark.llm` and skips them via `pytest -m 'not llm'` to avoid exposing API keys in CI.
+
+**Note on Branch Protection:** To maintain high code quality, it is recommended to enable branch protection rules in GitHub for the `main` branch, ensuring that the CI pipeline checks pass before any pull request can be merged.
