@@ -19,6 +19,8 @@ crateshield = "crateshield.__main__:main"
 # Keep CI focused on correctness while the legacy modules are incrementally
 # modernized. These rules are stylistic or advisory and currently produce
 # noisy failures across the existing codebase.
+required-version = ">=0.9.0"
+
 [tool.ruff.lint]
 ignore = [
     "BLE001",  # broad exception handling is intentional at network boundaries
