@@ -1,7 +1,0 @@
-[package]
-name = "pparking_lot"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-

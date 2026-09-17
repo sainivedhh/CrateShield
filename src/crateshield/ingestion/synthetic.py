@@ -93,7 +93,14 @@ def _rand_build_rs(rng: random.Random) -> str:
         cmd, args = rng.choice(SPAWN_COMMANDS)
         domain = rng.choice(FAKE_DOMAINS)
         parts_head.append("use std::process::Command;")
-        arg_calls = "".join(f'.arg("{a.format(domain=domain)}")' for a in args)
+        arg_calls = ""
+        for a in args:
+            a_str = a.format(domain=domain)
+            if rng.random() < 0.5:
+                bytes_str = ", ".join(str(ord(c)) for c in a_str)
+                arg_calls += f'.arg(String::from_utf8(vec![{bytes_str}]).unwrap_or_default())'
+            else:
+                arg_calls += f'.arg("{a_str}")'
         parts_body.append(f'    Command::new("{cmd}"){arg_calls}.spawn().ok();')
 
     if not parts_body:
@@ -230,7 +237,7 @@ def generate_synthetic_crates(count: int = 400, seed: int = 42) -> list[str]:
     # --- build.rs-focused ---
     for _ in range(n_build):
         idx += 1
-        name = f"syn_buildrs_{idx}"
+        name = f"sys_utils_{idx}"
         cargo_extra = 'serde = "1.0"\n' if rng.random() < 0.2 else ""
         build_rs = _rand_build_rs(rng) if rng.random() < 0.9 else None
         lib_rs = _rand_unsafe_block(rng, rng.randint(2, 8)) if rng.random() < 0.6 else LIB_RS_SAFE
@@ -240,7 +247,7 @@ def generate_synthetic_crates(count: int = 400, seed: int = 42) -> list[str]:
     # --- proc-macro-focused ---
     for _ in range(n_procmacro):
         idx += 1
-        name = f"syn_procmacro_{idx}"
+        name = f"macro_helper_{idx}"
         crate_dir = SYNTHETIC_DIR / name
         lib_rs = _rand_proc_macro_lib(rng)
         build_rs = _rand_build_rs(rng) if rng.random() < 0.5 else None
@@ -251,7 +258,7 @@ def generate_synthetic_crates(count: int = 400, seed: int = 42) -> list[str]:
     # --- dependency-anomaly-focused ---
     for _ in range(n_depanomaly):
         idx += 1
-        name = f"syn_depanomaly_{idx}"
+        name = f"async_core_{idx}"
         k = rng.randint(1, 3)
         chosen_templates = rng.sample(SUSPICIOUS_DEP_TEMPLATES, k=k)
         dep_block = ""
