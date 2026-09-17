@@ -1,15 +1,13 @@
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
-from pathlib import Path
+import re
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from crateshield.config import ROOT, WORK_DIR, ensure_dirs
+from crateshield.config import RESULTS_DIR, SIGNALS_DIR, WORK_DIR, ensure_dirs
 from crateshield.ingestion.downloader import fetch_crate_metadata
 
 app = FastAPI(title="CrateShield API")
@@ -43,21 +41,19 @@ def get_ablation():
     return json.loads(res_path.read_text(encoding="utf-8"))
 
 
-import re
-
 def is_valid_crate_name(name: str) -> bool:
-    return bool(re.match(r"^[a-zA-Z0-9_-]+$", name))
+    return bool(re.fullmatch(r"[a-zA-Z0-9_-]+", name))
+
 
 @app.get("/api/crate/{name}")
 def get_crate_metadata(name: str):
-    """Basic crates.io metadata lookup — used by the frontend to resolve the
-    latest version and show registry info (downloads, description, repo)."""
+    """Basic crates.io metadata lookup used by the frontend."""
     if not is_valid_crate_name(name):
         raise HTTPException(status_code=400, detail="Invalid crate name")
     try:
         meta = fetch_crate_metadata(name)
     except Exception as exc:
-        raise HTTPException(status_code=404, detail=f"Crate '{name}' not found on crates.io ({exc})")
+        raise HTTPException(status_code=404, detail=f"Crate '{name}' not found on crates.io ({exc})") from exc
     crate = meta.get("crate", {})
     return {
         "name": crate.get("id"),
@@ -77,9 +73,7 @@ def get_crate_metadata(name: str):
 
 @app.get("/api/predict")
 def predict(name: str, version: str | None = None):
-    """Full analysis for one crate: resolves latest version if not given,
-    extracts all five signal families, and returns a risk score/level plus
-    the full signal breakdown for the UI to render."""
+    """Extract signals and return the rule/model risk assessment for a crate."""
     if not is_valid_crate_name(name):
         raise HTTPException(status_code=400, detail="Invalid crate name")
     ensure_dirs()
@@ -91,66 +85,44 @@ def predict(name: str, version: str | None = None):
             meta = fetch_crate_metadata(name)
             version = meta.get("crate", {}).get("max_version")
         except Exception as exc:
-            raise HTTPException(status_code=404, detail=f"Could not resolve latest version for '{name}' ({exc})")
+            raise HTTPException(status_code=404, detail=f"Could not resolve latest version for '{name}' ({exc})") from exc
         if not version:
             raise HTTPException(status_code=404, detail=f"No published version found for '{name}'")
 
     try:
         signals = extract_only(name, version)
     except Exception as exc:
-        raise HTTPException(status_code=422, detail=f"Failed to fetch/parse {name}@{version}: {exc}")
+        raise HTTPException(status_code=422, detail=f"Failed to fetch/parse {name}@{version}: {exc}") from exc
 
     risk = assess_risk(signals)
 
-    from crateshield.config import RESULTS_DIR
-    from crateshield.evaluation.train import extract_features, FEATURE_NAMES
-    import xgboost as xgb
-    import numpy as np
+    try:
+        from crateshield.evaluation.train import FEATURE_NAMES, extract_features
+        import numpy as np
+        import xgboost as xgb
 
-    model_path = RESULTS_DIR / "xgb_model.json"
-    if model_path.exists():
-        try:
+        model_path = RESULTS_DIR / "xgb_model.json"
+        if model_path.exists():
             model = xgb.XGBClassifier()
             model.load_model(model_path)
-            features = extract_features(signals)
-            X_pred = np.array([features])
-            prob = float(model.predict_proba(X_pred)[0][1])
-            
-            importance_dict = model.get_booster().get_score(importance_type='gain')
-            importances = [{"feature": FEATURE_NAMES[int(k[1:])], "importance": float(v)} for k, v in importance_dict.items()]
-            importances.sort(key=lambda x: x["importance"], reverse=True)
-            
+            X_pred = np.array([extract_features(signals)])
+            probabilities = model.predict_proba(X_pred)[0]
+            malicious_index = list(model.classes_).index(1) if 1 in model.classes_ else 0
+            importance_dict = model.get_booster().get_score(importance_type="gain")
+            importances = []
+            for key, value in importance_dict.items():
+                if key.startswith("f") and key[1:].isdigit():
+                    index = int(key[1:])
+                    if index < len(FEATURE_NAMES):
+                        importances.append({"feature": FEATURE_NAMES[index], "importance": float(value)})
             risk["model"] = {
-                "malicious_probability": prob,
-                "feature_importances": importances
+                "malicious_probability": float(probabilities[malicious_index]),
+                "feature_importances": sorted(importances, key=lambda item: item["importance"], reverse=True),
             }
-        except Exception as e:
-            print(f"Warning: Failed to load/run XGBoost model: {e}")
+    except Exception as exc:
+        print(f"Warning: Failed to load/run XGBoost model: {exc}")
 
-    sev_model_path = RESULTS_DIR / "xgb_severity_model.json"
-    if sev_model_path.exists():
-        try:
-            from crateshield.evaluation.train import SEVERITY_LEVELS
-            sev_model = xgb.XGBClassifier()
-            sev_model.load_model(sev_model_path)
-            features = extract_features(signals)
-            X_pred = np.array([features])
-            pred_idx = int(sev_model.predict(X_pred)[0])
-            probs = sev_model.predict_proba(X_pred)[0]
-            
-            risk["severity_model"] = {
-                "predicted_severity": SEVERITY_LEVELS[pred_idx],
-                "probabilities": [{"severity": sev, "probability": float(p)} for sev, p in zip(SEVERITY_LEVELS, probs)]
-            }
-        except Exception as e:
-            print(f"Warning: Failed to load/run XGBoost severity model: {e}")
-
-    return {
-        "crate": name,
-        "version": version,
-        "risk": risk,
-        "signals": signals,
-    }
+    return {"crate": name, "version": version, "risk": risk, "signals": signals}
 
 
 class RunRequest(BaseModel):
@@ -159,8 +131,7 @@ class RunRequest(BaseModel):
 
 @app.post("/api/run")
 def run_command(req: RunRequest):
-    allowed_commands = ["ingest-rustsec", "ablation", "train"]
-    if req.command not in allowed_commands:
+    if req.command not in {"ingest-rustsec", "ablation", "train"}:
         raise HTTPException(status_code=400, detail="Invalid command")
     try:
         if req.command == "ingest-rustsec":
@@ -169,9 +140,14 @@ def run_command(req: RunRequest):
         elif req.command == "ablation":
             from crateshield.evaluation.ablation import main as ablation_main
             ablation_main()
-        elif req.command == "train":
-            from crateshield.evaluation.train import train_xgboost
-            train_xgboost()
-        return {"status": "started", "command": req.command}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        else:
+            from crateshield.evaluation.train import train_and_evaluate_xgb
+            dataset = WORK_DIR / "dataset.json"
+            if not dataset.exists():
+                dataset = WORK_DIR / "dataset_mini.json"
+            if not dataset.exists():
+                raise FileNotFoundError("No dataset.json or dataset_mini.json found")
+            train_and_evaluate_xgb(dataset, SIGNALS_DIR)
+        return {"status": "completed", "command": req.command}
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
