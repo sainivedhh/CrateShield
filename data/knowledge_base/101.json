@@ -1,0 +1,15 @@
+{
+  "id": "101",
+  "title": "Supply Chain Attack on bootstrap-sass",
+  "source": "CVE-2019-10842; Snyk",
+  "source_url": "",
+  "ecosystem": "RubyGems",
+  "attack_category": "compromised registry publish + RCE backdoor",
+  "technical_mechanism": "hidden backdoor in middleware.rb; crafted cookie value executed via eval()",
+  "indicators": [
+    "bootstrap-sass"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'bootstrap-sass' was discovered in the RubyGems ecosystem. The attack involved compromised registry publish + RCE backdoor. Mechanism: hidden backdoor in middleware.rb; crafted cookie value executed via eval()",
+  "date": "2019-03-26"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2025-0154",
+  "title": "Supply Chain Attack on replit_ruspty",
+  "source": "RustSec RUSTSEC-2025-0154",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `replit_ruspty` was removed from crates.io for malicious code The OpenSSF Package Analysis project identified 'replit_ruspty' @ 1.0.0 (crates.io) as malicious. Version 2.0.0 was also published with malware. It is considered malicious because: The package communicates with a domain associated with ",
+  "indicators": [
+    "replit_ruspty"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'replit_ruspty' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `replit_ruspty` was removed from crates.io for malicious code The OpenSSF Package Analysis project identified 'replit_ruspty' @ 1.0.0 (crates.io) as malicious. Version 2.0.0 was also published with malware. It is considered malicious because: The package communicates with a domain associated with ",
+  "date": "2025-11-04"
+}

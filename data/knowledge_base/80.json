@@ -1,0 +1,15 @@
+{
+  "id": "80",
+  "title": "Supply Chain Attack on express",
+  "source": "Socket 338-package report Oct 2025",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "typosquat cluster + BeaverTail infostealer",
+  "technical_mechanism": "North Korean Lazarus Contagious Interview campaign typosquat of express",
+  "indicators": [
+    "express"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'express' was discovered in the npm ecosystem. The attack involved typosquat cluster + BeaverTail infostealer. Mechanism: North Korean Lazarus Contagious Interview campaign typosquat of express",
+  "date": "2025-10-10"
+}

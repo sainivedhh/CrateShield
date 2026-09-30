@@ -1,0 +1,15 @@
+{
+  "id": "59",
+  "title": "Supply Chain Attack on templates-framework",
+  "source": "GitHub/npm incident reports; Backstabber's Knife Collection",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "account-takeover mass publishing + backdoor",
+  "technical_mechanism": "compromised ~200 short-named packages; added getcookies dependency executing remote JS",
+  "indicators": [
+    "templates-framework"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'templates-framework' was discovered in the npm ecosystem. The attack involved account-takeover mass publishing + backdoor. Mechanism: compromised ~200 short-named packages; added getcookies dependency executing remote JS",
+  "date": "2018-06-01"
+}

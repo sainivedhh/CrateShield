@@ -1,0 +1,15 @@
+{
+  "id": "69",
+  "title": "Supply Chain Attack on rc",
+  "source": "Mandiant Dec 2021",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "compromised maintainer + Windows info-stealer",
+  "technical_mechanism": "same DANABOT DLL delivery chain as coa compromise",
+  "indicators": [
+    "rc"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'rc' was discovered in the npm ecosystem. The attack involved compromised maintainer + Windows info-stealer. Mechanism: same DANABOT DLL delivery chain as coa compromise",
+  "date": "2021-11-04"
+}

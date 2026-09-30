@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2022-0042",
+  "title": "Supply Chain Attack on rustdecimal",
+  "source": "RustSec RUSTSEC-2022-0042",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "code-execution; malicious",
+  "technical_mechanism": " -- # malicious crate `rustdecimal` The Rust Security Response WG and the crates.io team [were notified][1] on 2022-05-02 of the existence of the malicious crate `rustdecimal`; which contained malware. The crate name was intentionally similar to the name of the popular [`rust_decimal`][2] crate; hoping ",
+  "indicators": [
+    "rustdecimal"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'rustdecimal' was discovered in the crates.io ecosystem. The attack involved code-execution; malicious. Mechanism:  -- # malicious crate `rustdecimal` The Rust Security Response WG and the crates.io team [were notified][1] on 2022-05-02 of the existence of the malicious crate `rustdecimal`; which contained malware. The crate name was intentionally similar to the name of the popular [`rust_decimal`][2] crate; hoping ",
+  "date": "2022-05-10"
+}

@@ -1,0 +1,11 @@
+.venv
+__pycache__
+*.pyc
+.env
+.git
+.github
+node_modules
+webapp
+tests
+data/raw
+data/extracted

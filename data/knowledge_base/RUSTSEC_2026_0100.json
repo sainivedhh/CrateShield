@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0100",
+  "title": "Supply Chain Attack on pretty-changelog-logger",
+  "source": "RustSec RUSTSEC-2026-0100",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `pretty-changelog-logger` was removed from crates.io for malicious code `pretty-changelog-logger` contains a build script (build.rs) that acts as a loader/dropper for malicious payloads. The malicious crate had 3 versions published on 2026-04-08 that had a total of 2239 downloads. There were no cr",
+  "indicators": [
+    "pretty-changelog-logger"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'pretty-changelog-logger' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `pretty-changelog-logger` was removed from crates.io for malicious code `pretty-changelog-logger` contains a build script (build.rs) that acts as a loader/dropper for malicious payloads. The malicious crate had 3 versions published on 2026-04-08 that had a total of 2239 downloads. There were no cr",
+  "date": "2026-04-13"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "60",
+  "title": "Supply Chain Attack on eslint-scope",
+  "source": "GitHub issue; npm advisory",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "compromised maintainer account",
+  "technical_mechanism": "postinstall sent .npmrc auth tokens and user info to pastebin",
+  "indicators": [
+    "eslint-scope"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'eslint-scope' was discovered in the npm ecosystem. The attack involved compromised maintainer account. Mechanism: postinstall sent .npmrc auth tokens and user info to pastebin",
+  "date": "2018-07-01"
+}

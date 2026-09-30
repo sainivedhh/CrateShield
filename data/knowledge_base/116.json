@@ -1,0 +1,15 @@
+{
+  "id": "116",
+  "title": "Supply Chain Attack on io.github.xz-java:xz-java",
+  "source": "Socket writeup Dec 2024",
+  "source_url": "",
+  "ecosystem": "Maven",
+  "attack_category": "typosquat of XZ for Java + obfuscated RCE backdoor",
+  "technical_mechanism": "receives and executes arbitrary shell commands via embedded backdoor",
+  "indicators": [
+    "io.github.xz-java:xz-java"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'io.github.xz-java:xz-java' was discovered in the Maven ecosystem. The attack involved typosquat of XZ for Java + obfuscated RCE backdoor. Mechanism: receives and executes arbitrary shell commands via embedded backdoor",
+  "date": "2024-05-12"
+}

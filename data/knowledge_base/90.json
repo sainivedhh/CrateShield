@@ -1,0 +1,15 @@
+{
+  "id": "90",
+  "title": "Supply Chain Attack on solana-py",
+  "source": "Sonatype SSCR 2024",
+  "source_url": "",
+  "ecosystem": "PyPI",
+  "attack_category": "typosquat of solana-py + crypto wallet theft",
+  "technical_mechanism": "ideal typosquat of Solana Python SDK; stole crypto wallet material",
+  "indicators": [
+    "solana-py"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'solana-py' was discovered in the PyPI ecosystem. The attack involved typosquat of solana-py + crypto wallet theft. Mechanism: ideal typosquat of Solana Python SDK; stole crypto wallet material",
+  "date": "2024-01-01"
+}

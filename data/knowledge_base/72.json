@@ -1,0 +1,15 @@
+{
+  "id": "72",
+  "title": "Supply Chain Attack on @solana/web3.js",
+  "source": "npm advisory; The Hacker News",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "compromised maintainer + crypto secret theft",
+  "technical_mechanism": "backdoored versions harvested wallet addresses and private keys",
+  "indicators": [
+    "@solana/web3.js"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package '@solana/web3.js' was discovered in the npm ecosystem. The attack involved compromised maintainer + crypto secret theft. Mechanism: backdoored versions harvested wallet addresses and private keys",
+  "date": "2024-12-02"
+}

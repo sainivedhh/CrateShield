@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0107",
+  "title": "Supply Chain Attack on mysten-metrics",
+  "source": "RustSec RUSTSEC-2026-0107",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `mysten-metrics` was removed from crates.io for malicious code `mysten-metrics` included a build script that attempted to exfiltrate data from the build machine. The malicious crate had 1 version published on 2026-04-20 and had no evidence of actual usage. This crate had no dependencies on crates.",
+  "indicators": [
+    "mysten-metrics"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'mysten-metrics' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `mysten-metrics` was removed from crates.io for malicious code `mysten-metrics` included a build script that attempted to exfiltrate data from the build machine. The malicious crate had 1 version published on 2026-04-20 and had no evidence of actual usage. This crate had no dependencies on crates.",
+  "date": "2026-04-22"
+}

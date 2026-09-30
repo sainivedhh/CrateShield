@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2025-0155",
+  "title": "Supply Chain Attack on rands",
+  "source": "RustSec RUSTSEC-2025-0155",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `rands` was removed from crates.io for malicious code This crate attempted to typosquat the `rand` crate; and would link in a malware payload on macOS and Linux hosts when built. This advisory is to retrospectively document this attempted attack. The version information and download records of the",
+  "indicators": [
+    "rands"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'rands' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `rands` was removed from crates.io for malicious code This crate attempted to typosquat the `rand` crate; and would link in a malware payload on macOS and Linux hosts when built. This advisory is to retrospectively document this attempted attack. The version information and download records of the",
+  "date": "2025-02-10"
+}

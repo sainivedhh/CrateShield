@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2025-0145",
+  "title": "Supply Chain Attack on uniswap-utils",
+  "source": "RustSec RUSTSEC-2025-0145",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `uniswap-utils` was removed from crates.io for malicious code It depended on the `evm-units` crate; which appeared to be attempting to steal cryptocurrency.",
+  "indicators": [
+    "uniswap-utils"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'uniswap-utils' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `uniswap-utils` was removed from crates.io for malicious code It depended on the `evm-units` crate; which appeared to be attempting to steal cryptocurrency.",
+  "date": "2025-12-03"
+}

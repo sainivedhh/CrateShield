@@ -1,0 +1,15 @@
+{
+  "id": "88",
+  "title": "Supply Chain Attack on aiocpa",
+  "source": "Phylum; ReversingLabs; PyPI blog 2024-11-25",
+  "source_url": "",
+  "ecosystem": "PyPI",
+  "attack_category": "compromised legitimate package + crypto key exfiltration",
+  "technical_mechanism": "obfuscated blob overrode CryptoPay constructor on import; exfiltrated tokens/private keys to Telegram bot",
+  "indicators": [
+    "aiocpa"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'aiocpa' was discovered in the PyPI ecosystem. The attack involved compromised legitimate package + crypto key exfiltration. Mechanism: obfuscated blob overrode CryptoPay constructor on import; exfiltrated tokens/private keys to Telegram bot",
+  "date": "2024-11-21"
+}

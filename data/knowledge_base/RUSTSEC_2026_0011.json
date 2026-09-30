@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0011",
+  "title": "Supply Chain Attack on polymarket-client-sdks",
+  "source": "RustSec RUSTSEC-2026-0011",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `polymarket-client-sdks` was removed from crates.io for malicious code It appeared to be typosquatting existing crate [`polymarket-client-sdk`](https://crates.io/crates/polymarket-client-sdk) (`sdks` vs `sdk`) and attempting to steal credentials from local files. The malicious crate had 1 version ",
+  "indicators": [
+    "polymarket-client-sdks"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'polymarket-client-sdks' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `polymarket-client-sdks` was removed from crates.io for malicious code It appeared to be typosquatting existing crate [`polymarket-client-sdk`](https://crates.io/crates/polymarket-client-sdk) (`sdks` vs `sdk`) and attempting to steal credentials from local files. The malicious crate had 1 version ",
+  "date": "2026-02-13"
+}

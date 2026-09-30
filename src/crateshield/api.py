@@ -3,22 +3,41 @@ from __future__ import annotations
 import json
 import re
 
+import numpy as np
+import xgboost as xgb
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from crateshield.config import RESULTS_DIR, SIGNALS_DIR, WORK_DIR, ensure_dirs
+from crateshield.evaluation.train import FEATURE_NAMES, extract_features
 from crateshield.ingestion.downloader import fetch_crate_metadata
 
 app = FastAPI(title="CrateShield API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=["*"],  # allow all localhost ports (dev)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ---------------------------------------------------------------------------
+# Load XGBoost model ONCE at startup — not on every request
+# ---------------------------------------------------------------------------
+_xgb_model: xgb.XGBClassifier | None = None
+
+@app.on_event("startup")
+def _load_models():
+    global _xgb_model
+    model_path = RESULTS_DIR / "xgb_model.json"
+    if model_path.exists():
+        _xgb_model = xgb.XGBClassifier()
+        _xgb_model.load_model(model_path)
+        print(f"[startup] Loaded XGBoost model from {model_path}")
+    else:
+        print("[startup] No XGBoost model found — using rules-only scoring")
 
 
 @app.get("/api/dataset")
@@ -89,38 +108,38 @@ def predict(name: str, version: str | None = None):
         if not version:
             raise HTTPException(status_code=404, detail=f"No published version found for '{name}'")
 
-    try:
-        signals = extract_only(name, version)
-    except Exception as exc:
-        raise HTTPException(status_code=422, detail=f"Failed to fetch/parse {name}@{version}: {exc}") from exc
+    # -----------------------------------------------------------------------
+    # Cache hit: if signals already extracted, skip download + tree-sitter
+    # -----------------------------------------------------------------------
+    cached_signal_file = SIGNALS_DIR / f"{name}-{version}.json"
+    if cached_signal_file.exists():
+        signals = json.loads(cached_signal_file.read_text(encoding="utf-8"))
+    else:
+        try:
+            signals = extract_only(name, version)
+        except Exception as exc:
+            raise HTTPException(status_code=422, detail=f"Failed to fetch/parse {name}@{version}: {exc}") from exc
 
     risk = assess_risk(signals)
 
-    try:
-        from crateshield.evaluation.train import FEATURE_NAMES, extract_features
-        import numpy as np
-        import xgboost as xgb
-
-        model_path = RESULTS_DIR / "xgb_model.json"
-        if model_path.exists():
-            model = xgb.XGBClassifier()
-            model.load_model(model_path)
+    # Use the already-loaded model (startup), no re-loading per request
+    if _xgb_model is not None:
+        try:
             X_pred = np.array([extract_features(signals)])
-            probabilities = model.predict_proba(X_pred)[0]
-            malicious_index = list(model.classes_).index(1) if 1 in model.classes_ else 0
-            importance_dict = model.get_booster().get_score(importance_type="gain")
-            importances = []
-            for key, value in importance_dict.items():
-                if key.startswith("f") and key[1:].isdigit():
-                    index = int(key[1:])
-                    if index < len(FEATURE_NAMES):
-                        importances.append({"feature": FEATURE_NAMES[index], "importance": float(value)})
+            probabilities = _xgb_model.predict_proba(X_pred)[0]
+            malicious_index = list(_xgb_model.classes_).index(1) if 1 in _xgb_model.classes_ else 0
+            importance_dict = _xgb_model.get_booster().get_score(importance_type="gain")
+            importances = [
+                {"feature": FEATURE_NAMES[int(k[1:])], "importance": float(v)}
+                for k, v in importance_dict.items()
+                if k.startswith("f") and k[1:].isdigit() and int(k[1:]) < len(FEATURE_NAMES)
+            ]
             risk["model"] = {
                 "malicious_probability": float(probabilities[malicious_index]),
-                "feature_importances": sorted(importances, key=lambda item: item["importance"], reverse=True),
+                "feature_importances": sorted(importances, key=lambda x: x["importance"], reverse=True),
             }
-    except Exception as exc:
-        print(f"Warning: Failed to load/run XGBoost model: {exc}")
+        except Exception as exc:
+            print(f"Warning: XGBoost inference failed: {exc}")
 
     return {"crate": name, "version": version, "risk": risk, "signals": signals}
 

@@ -1,0 +1,15 @@
+{
+  "id": "115",
+  "title": "Supply Chain Attack on com.github.codingandcoding",
+  "source": "Sonatype blog Jan 2021",
+  "source_url": "",
+  "ecosystem": "Maven",
+  "attack_category": "brandjacking + backdoor",
+  "technical_mechanism": "brandjacking supply-chain attack under legit-adjacent namespace",
+  "indicators": [
+    "com.github.codingandcoding"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'com.github.codingandcoding' was discovered in the Maven ecosystem. The attack involved brandjacking + backdoor. Mechanism: brandjacking supply-chain attack under legit-adjacent namespace",
+  "date": "2021-01-07"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "81",
+  "title": "Supply Chain Attack on dotenv",
+  "source": "Socket 338-package report Oct 2025",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "typosquat cluster + BeaverTail infostealer",
+  "technical_mechanism": "typosquat of dotenv delivering HexEval loader",
+  "indicators": [
+    "dotenv"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'dotenv' was discovered in the npm ecosystem. The attack involved typosquat cluster + BeaverTail infostealer. Mechanism: typosquat of dotenv delivering HexEval loader",
+  "date": "2025-10-10"
+}

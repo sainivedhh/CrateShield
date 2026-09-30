@@ -1,0 +1,15 @@
+{
+  "id": "61",
+  "title": "Supply Chain Attack on event-stream",
+  "source": "GHSA; ZeroPersistence",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "compromised maintainer + targeted backdoor",
+  "technical_mechanism": "obfuscated flatmap-stream dep decoded AES payload activating only in Copay wallet build; harvested wallet keys",
+  "indicators": [
+    "event-stream"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'event-stream' was discovered in the npm ecosystem. The attack involved compromised maintainer + targeted backdoor. Mechanism: obfuscated flatmap-stream dep decoded AES payload activating only in Copay wallet build; harvested wallet keys",
+  "date": "2018-11-01"
+}

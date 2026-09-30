@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2025-0150",
+  "title": "Supply Chain Attack on finch-rst",
+  "source": "RustSec RUSTSEC-2025-0150",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `finch-rst` was removed from crates.io for malicious code This attempts to typosquat the existing crate [`finch`](https://crates.io/crates/finch) to steal credentials from local files. The malicious crate had 1 version published on 2025-12-08 and had been downloaded 21 times. There were no crates ",
+  "indicators": [
+    "finch-rst"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'finch-rst' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `finch-rst` was removed from crates.io for malicious code This attempts to typosquat the existing crate [`finch`](https://crates.io/crates/finch) to steal credentials from local files. The malicious crate had 1 version published on 2025-12-08 and had been downloaded 21 times. There were no crates ",
+  "date": "2025-12-09"
+}

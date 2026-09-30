@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2023-0124",
+  "title": "Supply Chain Attack on bit-flags",
+  "source": "RustSec RUSTSEC-2023-0124",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `bit-flags` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the user `alexrichton` to run an arbitrary malware payload on Windows hosts. This advisory is to retrospectively document this attempted attack. The version information and",
+  "indicators": [
+    "bit-flags"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'bit-flags' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `bit-flags` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the user `alexrichton` to run an arbitrary malware payload on Windows hosts. This advisory is to retrospectively document this attempted attack. The version information and",
+  "date": "2023-12-22"
+}

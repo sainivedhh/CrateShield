@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0031",
+  "title": "Supply Chain Attack on time_calibrators",
+  "source": "RustSec RUSTSEC-2026-0031",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `time_calibrators` was removed from crates.io due to malicious code The `time_calibrators` crate attempted to exfiltrate `.env` files to a server that was in turn impersonating the legitimate `timeapi.io` service. The malicious crate had 1 version published on 2026-03-03 approximately 3 hours befo",
+  "indicators": [
+    "time_calibrators"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'time_calibrators' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `time_calibrators` was removed from crates.io due to malicious code The `time_calibrators` crate attempted to exfiltrate `.env` files to a server that was in turn impersonating the legitimate `timeapi.io` service. The malicious crate had 1 version published on 2026-03-03 approximately 3 hours befo",
+  "date": "2026-03-03"
+}

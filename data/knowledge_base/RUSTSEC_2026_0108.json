@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0108",
+  "title": "Supply Chain Attack on sui-execution-cut",
+  "source": "RustSec RUSTSEC-2026-0108",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `sui-execution-cut` was removed from crates.io for malicious code `sui-execution-cut` included a build script that attempted to exfiltrate data from the build machine. The malicious crate had 1 version published on 2026-04-20 and had no evidence of actual usage. This crate had no dependencies on c",
+  "indicators": [
+    "sui-execution-cut"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'sui-execution-cut' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `sui-execution-cut` was removed from crates.io for malicious code `sui-execution-cut` included a build script that attempted to exfiltrate data from the build machine. The malicious crate had 1 version published on 2026-04-20 and had no evidence of actual usage. This crate had no dependencies on c",
+  "date": "2026-04-23"
+}

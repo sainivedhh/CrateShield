@@ -1,0 +1,15 @@
+{
+  "id": "107",
+  "title": "Supply Chain Attack on git_credential_manager",
+  "source": "StepSecurity SleeperGem report 2026-07",
+  "source_url": "",
+  "ecosystem": "RubyGems",
+  "attack_category": "persistent backdoor",
+  "technical_mechanism": "setuid ping6 backdoor; systemd/cron persistence; C2 at git.disroot.org",
+  "indicators": [
+    "git_credential_manager"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'git_credential_manager' was discovered in the RubyGems ecosystem. The attack involved persistent backdoor. Mechanism: setuid ping6 backdoor; systemd/cron persistence; C2 at git.disroot.org",
+  "date": "2026-07-01"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "71",
+  "title": "Supply Chain Attack on @lottiefiles/lottie-player",
+  "source": "Socket Oct 2024",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "compromised npm access token + crypto drainer",
+  "technical_mechanism": "compromised access token used to publish trojanized versions delivering wallet drainer",
+  "indicators": [
+    "@lottiefiles/lottie-player"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package '@lottiefiles/lottie-player' was discovered in the npm ecosystem. The attack involved compromised npm access token + crypto drainer. Mechanism: compromised access token used to publish trojanized versions delivering wallet drainer",
+  "date": "2024-10-01"
+}

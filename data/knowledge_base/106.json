@@ -1,0 +1,15 @@
+{
+  "id": "106",
+  "title": "Supply Chain Attack on GemStuffer",
+  "source": "Socket GemStuffer report",
+  "source_url": "",
+  "ecosystem": "RubyGems",
+  "attack_category": "registry-as-exfil-channel",
+  "technical_mechanism": "uses gem push to publish stolen data as public gem versions",
+  "indicators": [
+    "GemStuffer"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'GemStuffer' was discovered in the RubyGems ecosystem. The attack involved registry-as-exfil-channel. Mechanism: uses gem push to publish stolen data as public gem versions",
+  "date": "2026-05-13"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2025-0159",
+  "title": "Supply Chain Attack on sophosfirewall-python",
+  "source": "RustSec RUSTSEC-2025-0159",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `sophosfirewall-python` was removed from crates.io for malicious code `sophosfirewall-python` was part of a campaign that attempted to exfiltrate environmental data from the host. The malicious crate had 6 versions published in February 2025; and had no evidence of actual usage. This crate had no ",
+  "indicators": [
+    "sophosfirewall-python"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'sophosfirewall-python' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `sophosfirewall-python` was removed from crates.io for malicious code `sophosfirewall-python` was part of a campaign that attempted to exfiltrate environmental data from the host. The malicious crate had 6 versions published in February 2025; and had no evidence of actual usage. This crate had no ",
+  "date": "2025-02-15"
+}

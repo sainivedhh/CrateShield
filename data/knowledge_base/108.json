@@ -1,0 +1,15 @@
+{
+  "id": "108",
+  "title": "Supply Chain Attack on Dendreo",
+  "source": "StepSecurity SleeperGem report 2026-07",
+  "source_url": "",
+  "ecosystem": "RubyGems",
+  "attack_category": "persistent backdoor",
+  "technical_mechanism": "drop of setuid ping6 rootkit binary plus persistence mechanisms",
+  "indicators": [
+    "Dendreo"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'Dendreo' was discovered in the RubyGems ecosystem. The attack involved persistent backdoor. Mechanism: drop of setuid ping6 rootkit binary plus persistence mechanisms",
+  "date": "2026-07-01"
+}

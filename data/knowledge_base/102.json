@@ -1,0 +1,15 @@
+{
+  "id": "102",
+  "title": "Supply Chain Attack on rest-client",
+  "source": "CVE-2019-15224; GHSA-333g-rpr4-7hxq",
+  "source_url": "",
+  "ecosystem": "RubyGems",
+  "attack_category": "compromised maintainer account + backdoor + cryptominer",
+  "technical_mechanism": "backdoor activated when Rails.env starts with p; exfiltrated env vars/cookies",
+  "indicators": [
+    "rest-client"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'rest-client' was discovered in the RubyGems ecosystem. The attack involved compromised maintainer account + backdoor + cryptominer. Mechanism: backdoor activated when Rails.env starts with p; exfiltrated env vars/cookies",
+  "date": "2019-08-19"
+}

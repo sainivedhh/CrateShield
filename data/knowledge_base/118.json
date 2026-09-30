@@ -1,0 +1,15 @@
+{
+  "id": "118",
+  "title": "Supply Chain Attack on org.mvnpm:posthog-node",
+  "source": "Socket; The Hacker News",
+  "source_url": "",
+  "ecosystem": "Maven",
+  "attack_category": "cross-registry worm propagation",
+  "technical_mechanism": "same setup_bun.js payload as npm wave; auto-mirrored from compromised npm package",
+  "indicators": [
+    "org.mvnpm:posthog-node"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'org.mvnpm:posthog-node' was discovered in the Maven ecosystem. The attack involved cross-registry worm propagation. Mechanism: same setup_bun.js payload as npm wave; auto-mirrored from compromised npm package",
+  "date": "2025-11-25"
+}

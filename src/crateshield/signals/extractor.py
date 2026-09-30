@@ -18,7 +18,9 @@ from crateshield.signals.metadata import extract_metadata
 from crateshield.signals.proc_macro import analyze_proc_macro
 from crateshield.signals.typosquat import analyze_typosquatting
 from crateshield.signals.unsafe_ffi import analyze_unsafe_ffi
-
+from crateshield.signals.network import analyze_network
+from crateshield.signals.process_execution import analyze_process_execution
+from crateshield.signals.credentials import analyze_credentials
 logger = logging.getLogger(__name__)
 
 _PARSER: Parser | None = None
@@ -84,4 +86,7 @@ def extract_all_signals(
         "typosquatting": analyze_typosquatting(name, top_crates),
         "dependencies": analyze_dependencies(files),
         "metadata": extract_metadata(files, name, version),
+        "network": analyze_network(files, parser),
+        "process": analyze_process_execution(files, parser),
+        "credentials": analyze_credentials(files, parser),
     }

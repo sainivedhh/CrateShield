@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0266",
+  "title": "Supply Chain Attack on internment",
+  "source": "RustSec RUSTSEC-2026-0266",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `internment` 0.8.7 was removed from crates.io due to a malicious dependency A new version of the `internment` crate was published with a direct dependency on `proc-macro1`; which would execute a malicious build script. The compromised version of this crate was published on 2026-08-20; and was remo",
+  "indicators": [
+    "internment"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'internment' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `internment` 0.8.7 was removed from crates.io due to a malicious dependency A new version of the `internment` crate was published with a direct dependency on `proc-macro1`; which would execute a malicious build script. The compromised version of this crate was published on 2026-08-20; and was remo",
+  "date": "2026-08-20"
+}

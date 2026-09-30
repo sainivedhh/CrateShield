@@ -1,0 +1,15 @@
+{
+  "id": "68",
+  "title": "Supply Chain Attack on coa",
+  "source": "Mandiant Dec 2021",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "compromised maintainer + Windows info-stealer",
+  "technical_mechanism": "malicious updates downloaded and executed DANABOT DLL on Windows hosts",
+  "indicators": [
+    "coa"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'coa' was discovered in the npm ecosystem. The attack involved compromised maintainer + Windows info-stealer. Mechanism: malicious updates downloaded and executed DANABOT DLL on Windows hosts",
+  "date": "2021-11-04"
+}

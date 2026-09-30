@@ -317,10 +317,24 @@ def fetch_benign_crates(session: requests.Session | None = None, count: int = 30
     return crates
 
 
+from crateshield.ingestion.ossf import fetch_ossf_crates
+from crateshield.ingestion.crates_dump import sample_stratified_benign
+
 def build_full_dataset(dest: Path, benign_count: int = 2000) -> dict:
     s = _session()
     malicious = fetch_malicious_advisories(s)
-    benign = fetch_benign_crates(s, count=benign_count)
+    
+    # Merge OSSF malicious crates
+    ossf_malicious = fetch_ossf_crates()
+    for o in ossf_malicious:
+        if not any(a.get("package") == o.get("package") for a in malicious):
+            malicious.append(o)
+            
+    # Try stratified benign sampling; fallback to API if fails
+    benign = sample_stratified_benign(top_n=int(benign_count*0.5), mid_n=int(benign_count*0.3), tail_n=int(benign_count*0.2))
+    if not benign:
+        logger.warning("crates_dump failed to sample; falling back to API fetch")
+        benign = fetch_benign_crates(s, count=benign_count)
 
     crates = []
     skipped_no_name = 0
@@ -348,6 +362,8 @@ def build_full_dataset(dest: Path, benign_count: int = 2000) -> dict:
             "name": name,
             "version": version,
             "label": "MALICIOUS",
+            "source": "ossf" if "ossf" in (a.get("categories") or []) else "rustsec",
+            "is_synthetic": False,
             "label_source": a.get("id"),
             "attack_category": ",".join(a.get("categories") or []),
             "url": a.get("url"),
@@ -363,7 +379,9 @@ def build_full_dataset(dest: Path, benign_count: int = 2000) -> dict:
             "name": b["package"],
             "version": b["version"],
             "label": "BENIGN",
-            "label_source": b["id"],
+            "source": b.get("source", "crates.io-api"),
+            "is_synthetic": False,
+            "label_source": b.get("id", "crates_dump"),
             "attack_category": "none",
             "url": b["url"],
         })

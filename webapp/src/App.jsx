@@ -1,7 +1,7 @@
 import React from 'react'
 import { KV, Tags, RiskGauge, LevelBadge, SignalRow } from './components.jsx'
 
-const API_BASE = 'http://localhost:8000'
+const API_BASE = 'http://localhost:8080'
 
 const SIGNAL_LABELS = {
   build_network: 'Outbound network in build.rs',

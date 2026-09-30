@@ -1,0 +1,15 @@
+{
+  "id": "73",
+  "title": "Supply Chain Attack on eslint-config-prettier",
+  "source": "community disclosure; GHSA",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "compromised maintainer account + token theft",
+  "technical_mechanism": "malicious postinstall scripts exfiltrated npm tokens",
+  "indicators": [
+    "eslint-config-prettier"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'eslint-config-prettier' was discovered in the npm ecosystem. The attack involved compromised maintainer account + token theft. Mechanism: malicious postinstall scripts exfiltrated npm tokens",
+  "date": "2025-07-01"
+}

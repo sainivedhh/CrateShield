@@ -1,0 +1,15 @@
+{
+  "id": "93",
+  "title": "Supply Chain Attack on lightning",
+  "source": "Socket",
+  "source_url": "",
+  "ecosystem": "PyPI",
+  "attack_category": "compromised package + import-time downloader",
+  "technical_mechanism": "hidden obfuscated JS launched via daemon thread on import; stole tokens/env/cloud secrets",
+  "indicators": [
+    "lightning"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'lightning' was discovered in the PyPI ecosystem. The attack involved compromised package + import-time downloader. Mechanism: hidden obfuscated JS launched via daemon thread on import; stole tokens/env/cloud secrets",
+  "date": "2026-04-30"
+}

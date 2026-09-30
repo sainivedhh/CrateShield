@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0028",
+  "title": "Supply Chain Attack on tracing_checks",
+  "source": "RustSec RUSTSEC-2026-0028",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `tracing_checks` was removed from crates.io for transitively including malicious code This is part of an ongoing campaign to attempt to typosquat crates in an attempt to exfiltrate Polymarket credentials. The malicious crate had 1 version published on 2026-02-26 approximately 9 hours before remova",
+  "indicators": [
+    "tracing_checks"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'tracing_checks' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `tracing_checks` was removed from crates.io for transitively including malicious code This is part of an ongoing campaign to attempt to typosquat crates in an attempt to exfiltrate Polymarket credentials. The malicious crate had 1 version published on 2026-02-26 approximately 9 hours before remova",
+  "date": "2026-02-26"
+}

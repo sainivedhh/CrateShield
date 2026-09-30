@@ -1,0 +1,15 @@
+{
+  "id": "64",
+  "title": "Supply Chain Attack on colors.js",
+  "source": "maintainer commit; Snyk",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "maintainer sabotage / protestware",
+  "technical_mechanism": "infinite loop deliberately introduced; broke thousands of dependent builds",
+  "indicators": [
+    "colors.js"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'colors.js' was discovered in the npm ecosystem. The attack involved maintainer sabotage / protestware. Mechanism: infinite loop deliberately introduced; broke thousands of dependent builds",
+  "date": "2022-01-09"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "75",
+  "title": "Supply Chain Attack on nx",
+  "source": "Socket; Nx disclosure Aug 2025",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "compromised publish credentials + GitHub token exfiltration",
+  "technical_mechanism": "malicious versions ran TruffleHog via postinstall; exposed 2180 repos",
+  "indicators": [
+    "nx"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'nx' was discovered in the npm ecosystem. The attack involved compromised publish credentials + GitHub token exfiltration. Mechanism: malicious versions ran TruffleHog via postinstall; exposed 2180 repos",
+  "date": "2025-08-26"
+}

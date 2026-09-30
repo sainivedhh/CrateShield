@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0265",
+  "title": "Supply Chain Attack on proc-macro1",
+  "source": "RustSec RUSTSEC-2026-0265",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `proc-macro1` was removed from crates.io due to malicious code It was reported `proc-macro1` contained a build script that would download a malicious payload. This crate had two versions; both published on 2026-08-20. The crate was removed from crates.io and related user accounts were locked. This",
+  "indicators": [
+    "proc-macro1"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'proc-macro1' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `proc-macro1` was removed from crates.io due to malicious code It was reported `proc-macro1` contained a build script that would download a malicious payload. This crate had two versions; both published on 2026-08-20. The crate was removed from crates.io and related user accounts were locked. This",
+  "date": "2026-08-20"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2023-0121",
+  "title": "Supply Chain Attack on libusb1-main",
+  "source": "RustSec RUSTSEC-2023-0121",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `libusb1-main` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the user `Kraded` to run an arbitrary malware payload on Windows hosts. This advisory is to retrospectively document this attempted attack. The version information and d",
+  "indicators": [
+    "libusb1-main"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'libusb1-main' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `libusb1-main` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the user `Kraded` to run an arbitrary malware payload on Windows hosts. This advisory is to retrospectively document this attempted attack. The version information and d",
+  "date": "2023-11-15"
+}

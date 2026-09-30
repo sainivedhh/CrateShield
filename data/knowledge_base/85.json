@@ -1,0 +1,15 @@
+{
+  "id": "85",
+  "title": "Supply Chain Attack on W4SP Stealer family",
+  "source": "ReversingLabs colourama campaign writeups",
+  "source_url": "",
+  "ecosystem": "PyPI",
+  "attack_category": "typosquat cluster + credential stealer",
+  "technical_mechanism": "injected into legit-looking libs; stole browser cookies/passwords/Discord tokens/crypto wallets",
+  "indicators": [
+    "W4SP Stealer family"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'W4SP Stealer family' was discovered in the PyPI ecosystem. The attack involved typosquat cluster + credential stealer. Mechanism: injected into legit-looking libs; stole browser cookies/passwords/Discord tokens/crypto wallets",
+  "date": "2022-08-01"
+}

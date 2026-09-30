@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0039",
+  "title": "Supply Chain Attack on chrono_anchor",
+  "source": "RustSec RUSTSEC-2026-0039",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `chrono_anchor` was removed from crates.io due to malicious code The `chrono_anchor` crate attempted to exfiltrate `.env` files to a server that was in turn impersonating the legitimate `timeapi.io` service. The malicious crate had 1 version published on 2026-03-04 approximately 6 days before remo",
+  "indicators": [
+    "chrono_anchor"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'chrono_anchor' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `chrono_anchor` was removed from crates.io due to malicious code The `chrono_anchor` crate attempted to exfiltrate `.env` files to a server that was in turn impersonating the legitimate `timeapi.io` service. The malicious crate had 1 version published on 2026-03-04 approximately 6 days before remo",
+  "date": "2026-03-10"
+}

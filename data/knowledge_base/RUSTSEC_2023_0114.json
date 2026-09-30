@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2023-0114",
+  "title": "Supply Chain Attack on tiny-server",
+  "source": "RustSec RUSTSEC-2023-0114",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `tiny-server` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the malicious user `http-tiny` and contained a malware payload in `build.rs` to exfiltrate host information to the attacker. This advisory is to retrospectively document ",
+  "indicators": [
+    "tiny-server"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'tiny-server' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `tiny-server` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the malicious user `http-tiny` and contained a malware payload in `build.rs` to exfiltrate host information to the attacker. This advisory is to retrospectively document ",
+  "date": "2023-11-06"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "62",
+  "title": "Supply Chain Attack on flatmap-stream",
+  "source": "GHSA; ZeroPersistence",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "compromised maintainer + targeted backdoor",
+  "technical_mechanism": "same as event-stream row",
+  "indicators": [
+    "flatmap-stream"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'flatmap-stream' was discovered in the npm ecosystem. The attack involved compromised maintainer + targeted backdoor. Mechanism: same as event-stream row",
+  "date": "2018-11-01"
+}

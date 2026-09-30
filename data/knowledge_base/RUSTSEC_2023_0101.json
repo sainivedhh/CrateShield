@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2023-0101",
+  "title": "Supply Chain Attack on oncecell",
+  "source": "RustSec RUSTSEC-2023-0101",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `oncecell` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the malicious user `amaperf` and contained a malware payload in build.rs to exfiltrate host information to the attacker. This advisory is to retrospectively document this at",
+  "indicators": [
+    "oncecell"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'oncecell' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `oncecell` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the malicious user `amaperf` and contained a malware payload in build.rs to exfiltrate host information to the attacker. This advisory is to retrospectively document this at",
+  "date": "2023-08-16"
+}

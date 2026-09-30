@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2025-0156",
+  "title": "Supply Chain Attack on tree-sitter-pkl",
+  "source": "RustSec RUSTSEC-2025-0156",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `tree-sitter-pkl` was removed from crates.io for malicious code `tree-sitter-pkl` was part of a campaign that attempted to exfiltrate environmental data from the host. The malicious crate had 1 version published in March 2025; and had no evidence of actual usage. This crate had no dependencies on ",
+  "indicators": [
+    "tree-sitter-pkl"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'tree-sitter-pkl' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `tree-sitter-pkl` was removed from crates.io for malicious code `tree-sitter-pkl` was part of a campaign that attempted to exfiltrate environmental data from the host. The malicious crate had 1 version published in March 2025; and had no evidence of actual usage. This crate had no dependencies on ",
+  "date": "2025-03-10"
+}

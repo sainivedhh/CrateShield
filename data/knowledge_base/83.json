@@ -1,0 +1,15 @@
+{
+  "id": "83",
+  "title": "Supply Chain Attack on eth-auditlog",
+  "source": "Socket XORIndex report Jul 2025",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "typosquat + postinstall loader + host profiling",
+  "technical_mechanism": "second stage BeaverTail via eth-auditlog eval",
+  "indicators": [
+    "eth-auditlog"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'eth-auditlog' was discovered in the npm ecosystem. The attack involved typosquat + postinstall loader + host profiling. Mechanism: second stage BeaverTail via eth-auditlog eval",
+  "date": "2025-07-15"
+}

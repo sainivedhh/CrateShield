@@ -1,0 +1,15 @@
+{
+  "id": "104",
+  "title": "Supply Chain Attack on tmt",
+  "source": "Socket RubyGems time-based attack report 2023",
+  "source_url": "",
+  "ecosystem": "RubyGems",
+  "attack_category": "time-triggered backdoor + credential theft",
+  "technical_mechanism": "delayed-activation logic; exfiltrates credentials after time trigger",
+  "indicators": [
+    "tmt"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'tmt' was discovered in the RubyGems ecosystem. The attack involved time-triggered backdoor + credential theft. Mechanism: delayed-activation logic; exfiltrates credentials after time trigger",
+  "date": "2023-02-01"
+}

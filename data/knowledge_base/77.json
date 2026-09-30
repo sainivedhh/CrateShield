@@ -1,0 +1,15 @@
+{
+  "id": "77",
+  "title": "Supply Chain Attack on posthog-node",
+  "source": "Socket; The Hacker News",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "second-wave worm + cross-registry spread",
+  "technical_mechanism": "setup_bun.js stole npm/PyPI/Maven/GitHub tokens; auto-republished trojanized versions (Shai-Hulud v2)",
+  "indicators": [
+    "posthog-node"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'posthog-node' was discovered in the npm ecosystem. The attack involved second-wave worm + cross-registry spread. Mechanism: setup_bun.js stole npm/PyPI/Maven/GitHub tokens; auto-republished trojanized versions (Shai-Hulud v2)",
+  "date": "2025-11-24"
+}

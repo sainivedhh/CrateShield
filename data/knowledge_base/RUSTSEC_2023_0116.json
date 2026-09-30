@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2023-0116",
+  "title": "Supply Chain Attack on registry-win",
+  "source": "RustSec RUSTSEC-2023-0116",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `registry-win` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the user `Kraded` to run an arbitrary malware payload on Windows hosts. This advisory is to retrospectively document this attempted attack. The version information and d",
+  "indicators": [
+    "registry-win"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'registry-win' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `registry-win` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the user `Kraded` to run an arbitrary malware payload on Windows hosts. This advisory is to retrospectively document this attempted attack. The version information and d",
+  "date": "2023-11-15"
+}

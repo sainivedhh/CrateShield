@@ -1,0 +1,15 @@
+{
+  "id": "67",
+  "title": "Supply Chain Attack on peacenotwar",
+  "source": "Snyk; GHSA",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "protestware",
+  "technical_mechanism": "overwrote file contents with heart emoji on RU/BY systems",
+  "indicators": [
+    "peacenotwar"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'peacenotwar' was discovered in the npm ecosystem. The attack involved protestware. Mechanism: overwrote file contents with heart emoji on RU/BY systems",
+  "date": "2022-03-01"
+}

@@ -88,6 +88,8 @@ def main() -> None:
                         "name": crate_name,
                         "version": "0.1.0",
                         "label": "MALICIOUS",
+                        "source": "synthetic",
+                        "is_synthetic": True,
                         "label_source": "synthetic-generator",
                         "attack_category": "synthetic",
                         "url": "local"

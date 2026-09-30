@@ -1,0 +1,15 @@
+{
+  "id": "109",
+  "title": "Supply Chain Attack on fastlane-plugin-run_tests_firebase_testlab",
+  "source": "StepSecurity SleeperGem report 2026-07",
+  "source_url": "",
+  "ecosystem": "RubyGems",
+  "attack_category": "persistent backdoor",
+  "technical_mechanism": "drop of setuid ping6 rootkit binary plus persistence mechanisms",
+  "indicators": [
+    "fastlane-plugin-run_tests_firebase_testlab"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'fastlane-plugin-run_tests_firebase_testlab' was discovered in the RubyGems ecosystem. The attack involved persistent backdoor. Mechanism: drop of setuid ping6 rootkit binary plus persistence mechanisms",
+  "date": "2026-07-01"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "84",
+  "title": "Supply Chain Attack on ctx",
+  "source": "PyPI incident report; GHSA",
+  "source_url": "",
+  "ecosystem": "PyPI",
+  "attack_category": "compromised maintainer (social-engineered takeover)",
+  "technical_mechanism": "postinstall CGI script exfiltrated AWS keys and environment variables to attacker DNS",
+  "indicators": [
+    "ctx"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'ctx' was discovered in the PyPI ecosystem. The attack involved compromised maintainer (social-engineered takeover). Mechanism: postinstall CGI script exfiltrated AWS keys and environment variables to attacker DNS",
+  "date": "2022-06-14"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0155",
+  "title": "Supply Chain Attack on exploration",
+  "source": "RustSec RUSTSEC-2026-0155",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `exploration` was removed from crates.io for malicious code A method within the `exploration` crate attempted to download and execute a payload from a remote site. The malicious crate had 1 version published on 2026-06-02; approximately 1 hour before removal; and had no evidence of actual usage. T",
+  "indicators": [
+    "exploration"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'exploration' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `exploration` was removed from crates.io for malicious code A method within the `exploration` crate attempted to download and execute a payload from a remote site. The malicious crate had 1 version published on 2026-06-02; approximately 1 hour before removal; and had no evidence of actual usage. T",
+  "date": "2026-06-02"
+}

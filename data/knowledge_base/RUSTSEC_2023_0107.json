@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2023-0107",
+  "title": "Supply Chain Attack on lasso-rs",
+  "source": "RustSec RUSTSEC-2023-0107",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `lasso-rs` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the user `Kraded` to run an arbitrary malware payload on Windows hosts. This advisory is to retrospectively document this attempted attack. The version information and downl",
+  "indicators": [
+    "lasso-rs"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'lasso-rs' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `lasso-rs` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the user `Kraded` to run an arbitrary malware payload on Windows hosts. This advisory is to retrospectively document this attempted attack. The version information and downl",
+  "date": "2023-11-15"
+}

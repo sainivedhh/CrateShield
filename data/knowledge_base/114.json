@@ -1,0 +1,15 @@
+{
+  "id": "114",
+  "title": "Supply Chain Attack on GOAST campaign modules",
+  "source": "arXiv 2606.26291 Beyond Takedown",
+  "source_url": "",
+  "ecosystem": "Go",
+  "attack_category": "attacker-repackaged modules + import-triggered downloader",
+  "technical_mechanism": "obfuscated code for import-triggered downloader; found via AST scan of Go module index",
+  "indicators": [
+    "GOAST campaign modules"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'GOAST campaign modules' was discovered in the Go ecosystem. The attack involved attacker-repackaged modules + import-triggered downloader. Mechanism: obfuscated code for import-triggered downloader; found via AST scan of Go module index",
+  "date": "2026-06-01"
+}

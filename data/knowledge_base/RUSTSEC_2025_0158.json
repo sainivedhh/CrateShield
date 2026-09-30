@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2025-0158",
+  "title": "Supply Chain Attack on jfrog_quotes",
+  "source": "RustSec RUSTSEC-2025-0158",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `jfrog_quotes` was removed from crates.io for malicious code `jfrog_quotes` was part of a campaign that attempted to exfiltrate environmental data from the host. The malicious crate had 1 version published in January 2025; and had no evidence of actual usage. This crate had no dependencies on crat",
+  "indicators": [
+    "jfrog_quotes"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'jfrog_quotes' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `jfrog_quotes` was removed from crates.io for malicious code `jfrog_quotes` was part of a campaign that attempted to exfiltrate environmental data from the host. The malicious crate had 1 version published in January 2025; and had no evidence of actual usage. This crate had no dependencies on crat",
+  "date": "2025-01-30"
+}

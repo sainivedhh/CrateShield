@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0016",
+  "title": "Supply Chain Attack on polymarkets-rs-clob-client",
+  "source": "RustSec RUSTSEC-2026-0016",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `polymarkets-rs-clob-client` was removed from crates.io for malicious code This is part of an ongoing campaign to attempt to typosquat crates in the [`polymarket-client-sdk`](https://crates.io/crates/polymarket-client-sdk) ecosystem to exfiltrate user credentials. The malicious crate had 1 version",
+  "indicators": [
+    "polymarkets-rs-clob-client"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'polymarkets-rs-clob-client' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `polymarkets-rs-clob-client` was removed from crates.io for malicious code This is part of an ongoing campaign to attempt to typosquat crates in the [`polymarket-client-sdk`](https://crates.io/crates/polymarket-client-sdk) ecosystem to exfiltrate user credentials. The malicious crate had 1 version",
+  "date": "2026-02-20"
+}

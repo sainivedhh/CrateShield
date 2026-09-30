@@ -1,0 +1,15 @@
+{
+  "id": "82",
+  "title": "Supply Chain Attack on vite-meta-plugin",
+  "source": "Socket XORIndex report Jul 2025",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "typosquat + postinstall loader + host profiling",
+  "technical_mechanism": "XORIndex loader via postinstall; multi-endpoint C2 rotation",
+  "indicators": [
+    "vite-meta-plugin"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'vite-meta-plugin' was discovered in the npm ecosystem. The attack involved typosquat + postinstall loader + host profiling. Mechanism: XORIndex loader via postinstall; multi-endpoint C2 rotation",
+  "date": "2025-07-15"
+}

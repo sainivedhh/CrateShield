@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2023-0103",
+  "title": "Supply Chain Attack on postgress",
+  "source": "RustSec RUSTSEC-2023-0103",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `postgress` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the malicious user `amaperf` and contained a malware payload in build.rs to exfiltrate host information to the attacker. This advisory is to retrospectively document this a",
+  "indicators": [
+    "postgress"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'postgress' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `postgress` was removed from crates.io for malicious code This crate was part of a typosquatting malware cluster published by the malicious user `amaperf` and contained a malware payload in build.rs to exfiltrate host information to the attacker. This advisory is to retrospectively document this a",
+  "date": "2023-08-16"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "89",
+  "title": "Supply Chain Attack on VMConnect",
+  "source": "Sonatype PaperPin campaign report",
+  "source_url": "",
+  "ecosystem": "PyPI",
+  "attack_category": "typosquat cluster + remote code loader",
+  "technical_mechanism": "imitated VMware vSphere connector; executed code from attacker-controlled URL on install",
+  "indicators": [
+    "VMConnect"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'VMConnect' was discovered in the PyPI ecosystem. The attack involved typosquat cluster + remote code loader. Mechanism: imitated VMware vSphere connector; executed code from attacker-controlled URL on install",
+  "date": "2023-10-01"
+}

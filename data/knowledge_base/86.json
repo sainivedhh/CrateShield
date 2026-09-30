@@ -1,0 +1,15 @@
+{
+  "id": "86",
+  "title": "Supply Chain Attack on torchtriton",
+  "source": "PyTorch official disclosure; GHSA-8hpj-pmqr-r2fm",
+  "source_url": "",
+  "ecosystem": "PyPI",
+  "attack_category": "dependency confusion (nightly extra-index-url)",
+  "technical_mechanism": "malicious wheel published for nightly-only package name; exfiltrated basic host data",
+  "indicators": [
+    "torchtriton"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'torchtriton' was discovered in the PyPI ecosystem. The attack involved dependency confusion (nightly extra-index-url). Mechanism: malicious wheel published for nightly-only package name; exfiltrated basic host data",
+  "date": "2022-12-30"
+}

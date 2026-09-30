@@ -1,0 +1,15 @@
+{
+  "id": "105",
+  "title": "Supply Chain Attack on zon",
+  "source": "Socket 60-gem campaign report",
+  "source_url": "",
+  "ecosystem": "RubyGems",
+  "attack_category": "imposter automation tools + credential theft",
+  "technical_mechanism": "gems delivered real automation while exfiltrating credentials to attacker infra",
+  "indicators": [
+    "zon"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'zon' was discovered in the RubyGems ecosystem. The attack involved imposter automation tools + credential theft. Mechanism: gems delivered real automation while exfiltrating credentials to attacker infra",
+  "date": "2025-08-07"
+}

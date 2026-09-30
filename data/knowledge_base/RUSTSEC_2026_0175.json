@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0175",
+  "title": "Supply Chain Attack on onering",
+  "source": "RustSec RUSTSEC-2026-0175",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `onering` 1.4.1 was removed from crates.io for malicious code A new version of the `onering` crate was published with code that attempted to exfiltrate both metadata and code from the project it was included within. One malicious version was published on 2026-06-10; approximately six hours before ",
+  "indicators": [
+    "onering"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'onering' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `onering` 1.4.1 was removed from crates.io for malicious code A new version of the `onering` crate was published with code that attempted to exfiltrate both metadata and code from the project it was included within. One malicious version was published on 2026-06-10; approximately six hours before ",
+  "date": "2026-06-10"
+}

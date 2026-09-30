@@ -1,0 +1,15 @@
+{
+  "id": "66",
+  "title": "Supply Chain Attack on node-ipc",
+  "source": "CVE-2022-23812; Snyk",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "protestware + destructive payload",
+  "technical_mechanism": "ransomware-style destructive payload targeting RU/BY-IP hosts",
+  "indicators": [
+    "node-ipc"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'node-ipc' was discovered in the npm ecosystem. The attack involved protestware + destructive payload. Mechanism: ransomware-style destructive payload targeting RU/BY-IP hosts",
+  "date": "2022-03-01"
+}

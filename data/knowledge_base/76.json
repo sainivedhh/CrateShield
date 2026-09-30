@@ -1,0 +1,15 @@
+{
+  "id": "76",
+  "title": "Supply Chain Attack on @ctrl/tinycolor",
+  "source": "Socket; Sysdig; CISA alert 2025-09-23",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "credential-harvesting self-replicating worm (postinstall)",
+  "technical_mechanism": "bundle.js postinstall ran TruffleHog; exfil to webhook.site; self-republished (Shai-Hulud wave 1)",
+  "indicators": [
+    "@ctrl/tinycolor"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package '@ctrl/tinycolor' was discovered in the npm ecosystem. The attack involved credential-harvesting self-replicating worm (postinstall). Mechanism: bundle.js postinstall ran TruffleHog; exfil to webhook.site; self-republished (Shai-Hulud wave 1)",
+  "date": "2025-09-15"
+}

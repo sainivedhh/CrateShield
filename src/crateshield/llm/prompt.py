@@ -49,7 +49,7 @@ def build_prompt(signals: dict, snippets: list[str] | None = None, raw_source: s
     if retrieved_context:
         user += "\n\nRelevant historical context (Known Incidents):\n"
         for ctx in retrieved_context:
-            user += f"- {ctx.get('package', 'Unknown')}: {ctx.get('description', '')}\n"
+            user += f"- [{ctx.get('id', 'Unknown')}] {ctx.get('title', '')}: {ctx.get('summary', '')}\n"
 
     user += """
 Respond in this exact JSON format:
@@ -58,6 +58,7 @@ Respond in this exact JSON format:
   "confidence": "HIGH|MEDIUM|LOW",
   "reasoning": "Step-by-step reasoning citing specific signals...",
   "primary_signals": ["..."],
+  "retrieved_evidence_used": ["id1", "id2"],
   "recommended_action": "Block|Manual review|Pass"
 }
 """

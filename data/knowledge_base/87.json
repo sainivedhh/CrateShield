@@ -1,0 +1,15 @@
+{
+  "id": "87",
+  "title": "Supply Chain Attack on ultralytics",
+  "source": "Socket; Ultralytics GHSA",
+  "source_url": "",
+  "ecosystem": "PyPI",
+  "attack_category": "poisoned build pipeline + cryptominer",
+  "technical_mechanism": "malicious GitHub Actions run published trojanized releases; launched XMRig cryptominer",
+  "indicators": [
+    "ultralytics"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'ultralytics' was discovered in the PyPI ecosystem. The attack involved poisoned build pipeline + cryptominer. Mechanism: malicious GitHub Actions run published trojanized releases; launched XMRig cryptominer",
+  "date": "2024-12-01"
+}

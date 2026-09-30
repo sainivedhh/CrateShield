@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0081",
+  "title": "Supply Chain Attack on logtrace",
+  "source": "RustSec RUSTSEC-2026-0081",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `logtrace` was removed from crates.io for malicious code `logtrace` appeared to be downloading a RAT. The malicious crate had 2 versions published on 2026-04-01 that had a total of 30 downloads. There were no crates depending on this crate on crates.io. Thanks to [Socket.dev](https://socket.dev/) ",
+  "indicators": [
+    "logtrace"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'logtrace' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `logtrace` was removed from crates.io for malicious code `logtrace` appeared to be downloading a RAT. The malicious crate had 2 versions published on 2026-04-01 that had a total of 30 downloads. There were no crates depending on this crate on crates.io. Thanks to [Socket.dev](https://socket.dev/) ",
+  "date": "2026-04-05"
+}

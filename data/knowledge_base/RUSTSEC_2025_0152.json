@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2025-0152",
+  "title": "Supply Chain Attack on finch_cli_rust",
+  "source": "RustSec RUSTSEC-2025-0152",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `finch_cli_rust` was removed from crates.io for malicious code This attempts to typosquat the existing crate [`finch_cli`](https://crates.io/crates/finch_cli) to steal credentials from local files. The malicious crate had 1 version published on 2025-12-08 and had been downloaded 18 times. There we",
+  "indicators": [
+    "finch_cli_rust"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'finch_cli_rust' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `finch_cli_rust` was removed from crates.io for malicious code This attempts to typosquat the existing crate [`finch_cli`](https://crates.io/crates/finch_cli) to steal credentials from local files. The malicious crate had 1 version published on 2025-12-08 and had been downloaded 18 times. There we",
+  "date": "2025-12-09"
+}

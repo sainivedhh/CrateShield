@@ -1,0 +1,15 @@
+{
+  "id": "112",
+  "title": "Supply Chain Attack on github.com/qiniiu/qmgo",
+  "source": "GitLab detection blog 2025-06-30",
+  "source_url": "",
+  "ecosystem": "Go",
+  "attack_category": "typosquat + MongoDB driver impersonation + persistent backdoor",
+  "technical_mechanism": "fake MongoDB driver with remote administration capabilities",
+  "indicators": [
+    "github.com/qiniiu/qmgo"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'github.com/qiniiu/qmgo' was discovered in the Go ecosystem. The attack involved typosquat + MongoDB driver impersonation + persistent backdoor. Mechanism: fake MongoDB driver with remote administration capabilities",
+  "date": "2025-06-01"
+}

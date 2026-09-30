@@ -1,0 +1,15 @@
+{
+  "id": "103",
+  "title": "Supply Chain Attack on doge-coin replicated wave",
+  "source": "ZDNet Aug 2019",
+  "source_url": "",
+  "ecosystem": "RubyGems",
+  "attack_category": "replicated-library backdoor + cryptomining",
+  "technical_mechanism": "full copies of legit libraries with injected coin-mining/exfil code",
+  "indicators": [
+    "doge-coin replicated wave"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'doge-coin replicated wave' was discovered in the RubyGems ecosystem. The attack involved replicated-library backdoor + cryptomining. Mechanism: full copies of legit libraries with injected coin-mining/exfil code",
+  "date": "2019-08-01"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0101",
+  "title": "Supply Chain Attack on safe-agent-rs",
+  "source": "RustSec RUSTSEC-2026-0101",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `safe-agent-rs` was removed from crates.io for being affiliated with malicious code While `safe-agent-rs` did not directly contain malicious code; it was owned by the same user as `pretty-changelog-logger` and `microsoftsystem64`. `safe-agent-rs` also appeared to be imitating a different websocket",
+  "indicators": [
+    "safe-agent-rs"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'safe-agent-rs' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `safe-agent-rs` was removed from crates.io for being affiliated with malicious code While `safe-agent-rs` did not directly contain malicious code; it was owned by the same user as `pretty-changelog-logger` and `microsoftsystem64`. `safe-agent-rs` also appeared to be imitating a different websocket",
+  "date": "2026-04-13"
+}

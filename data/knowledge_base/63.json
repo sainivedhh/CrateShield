@@ -1,0 +1,15 @@
+{
+  "id": "63",
+  "title": "Supply Chain Attack on ua-parser-js",
+  "source": "GHSA; Mandiant; Microsoft",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "compromised maintainer account + cryptominer + credential stealer",
+  "technical_mechanism": "downloaded jsextension miner and jdic credential-stealing library",
+  "indicators": [
+    "ua-parser-js"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'ua-parser-js' was discovered in the npm ecosystem. The attack involved compromised maintainer account + cryptominer + credential stealer. Mechanism: downloaded jsextension miner and jdic credential-stealing library",
+  "date": "2021-10-22"
+}

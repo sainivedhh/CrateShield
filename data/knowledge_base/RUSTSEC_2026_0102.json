@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0102",
+  "title": "Supply Chain Attack on microsoftsystem64",
+  "source": "RustSec RUSTSEC-2026-0102",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `microsoftsystem64` was removed from crates.io for malicious code `microsoftsystem64` installs a hardcoded SSH authorized_keys entry (persistence/backdoor) and scans for sensitive files (.env; credential-like JSON names; keyword-matching docs); reads their contents; base64-encodes where needed; an",
+  "indicators": [
+    "microsoftsystem64"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'microsoftsystem64' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `microsoftsystem64` was removed from crates.io for malicious code `microsoftsystem64` installs a hardcoded SSH authorized_keys entry (persistence/backdoor) and scans for sensitive files (.env; credential-like JSON names; keyword-matching docs); reads their contents; base64-encodes where needed; an",
+  "date": "2026-04-13"
+}

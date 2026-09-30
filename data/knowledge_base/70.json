@@ -1,0 +1,15 @@
+{
+  "id": "70",
+  "title": "Supply Chain Attack on @ledgerhq/connect-kit",
+  "source": "Socket; Ledger incident report",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "compromised maintainer + crypto drainer",
+  "technical_mechanism": "malicious versions injected wallet drainer via rogue WalletConnect project; ~$610k lost",
+  "indicators": [
+    "@ledgerhq/connect-kit"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package '@ledgerhq/connect-kit' was discovered in the npm ecosystem. The attack involved compromised maintainer + crypto drainer. Mechanism: malicious versions injected wallet drainer via rogue WalletConnect project; ~$610k lost",
+  "date": "2023-12-14"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "58",
+  "title": "Supply Chain Attack on crossenv",
+  "source": "Sonatype; Ohm et al. DIMVA 2020",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "typosquat of cross-env + credential theft",
+  "technical_mechanism": "postinstall/preinstall scripts POSTed npm tokens/credentials to C2",
+  "indicators": [
+    "crossenv"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'crossenv' was discovered in the npm ecosystem. The attack involved typosquat of cross-env + credential theft. Mechanism: postinstall/preinstall scripts POSTed npm tokens/credentials to C2",
+  "date": "2017-08-01"
+}

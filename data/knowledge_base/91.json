@@ -1,0 +1,15 @@
+{
+  "id": "91",
+  "title": "Supply Chain Attack on solana-stealer-wave",
+  "source": "The Hacker News roundup 2025-06-04",
+  "source_url": "",
+  "ecosystem": "PyPI",
+  "attack_category": "crypto secret theft",
+  "technical_mechanism": "steals Python source files and Solana key material; exfiltrates to external server",
+  "indicators": [
+    "solana-stealer-wave"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'solana-stealer-wave' was discovered in the PyPI ecosystem. The attack involved crypto secret theft. Mechanism: steals Python source files and Solana key material; exfiltrates to external server",
+  "date": "2025-06-01"
+}

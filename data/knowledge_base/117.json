@@ -1,0 +1,15 @@
+{
+  "id": "117",
+  "title": "Supply Chain Attack on io.github.leetcrunch:scribejava-core",
+  "source": "Socket Tick Tock report Mar 2025",
+  "source_url": "",
+  "ecosystem": "Maven",
+  "attack_category": "time-triggered OAuth credential theft",
+  "technical_mechanism": "obfuscated OAuth-harvesting code triggers only on the 15th of each month",
+  "indicators": [
+    "io.github.leetcrunch:scribejava-core"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'io.github.leetcrunch:scribejava-core' was discovered in the Maven ecosystem. The attack involved time-triggered OAuth credential theft. Mechanism: obfuscated OAuth-harvesting code triggers only on the 15th of each month",
+  "date": "2025-03-01"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "79",
+  "title": "Supply Chain Attack on easy-day-js",
+  "source": "Microsoft MSTIC blog 2026-06-17",
+  "source_url": "",
+  "ecosystem": "npm",
+  "attack_category": "typosquat of dayjs + postinstall payload",
+  "technical_mechanism": "injected dependency delivering RAT + crypto stealer as part of Mastra scope takeover",
+  "indicators": [
+    "easy-day-js"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'easy-day-js' was discovered in the npm ecosystem. The attack involved typosquat of dayjs + postinstall payload. Mechanism: injected dependency delivering RAT + crypto stealer as part of Mastra scope takeover",
+  "date": "2026-06-17"
+}

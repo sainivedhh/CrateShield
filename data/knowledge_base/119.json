@@ -1,0 +1,15 @@
+{
+  "id": "119",
+  "title": "Supply Chain Attack on org.fasterxml.jackson.core:jackson-databind",
+  "source": "Aikido; Socket",
+  "source_url": "",
+  "ecosystem": "Maven",
+  "attack_category": "namespace-prefix-swap typosquat + trojan downloader",
+  "technical_mechanism": "multi-stage payload delivering platform-specific Cobalt Strike executables",
+  "indicators": [
+    "org.fasterxml.jackson.core:jackson-databind"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'org.fasterxml.jackson.core:jackson-databind' was discovered in the Maven ecosystem. The attack involved namespace-prefix-swap typosquat + trojan downloader. Mechanism: multi-stage payload delivering platform-specific Cobalt Strike executables",
+  "date": "2025-12-29"
+}

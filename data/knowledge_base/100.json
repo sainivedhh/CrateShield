@@ -1,0 +1,15 @@
+{
+  "id": "100",
+  "title": "Supply Chain Attack on pyphetools",
+  "source": "Orca Security Hades report",
+  "source_url": "",
+  "ecosystem": "PyPI",
+  "attack_category": "Bun-runtime JS stealer via .pth startup",
+  "technical_mechanism": "part of Hades campaign wheel set",
+  "indicators": [
+    "pyphetools"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'pyphetools' was discovered in the PyPI ecosystem. The attack involved Bun-runtime JS stealer via .pth startup. Mechanism: part of Hades campaign wheel set",
+  "date": "2026-06-23"
+}

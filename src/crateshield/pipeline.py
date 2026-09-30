@@ -46,12 +46,20 @@ def analyze_crate(
     logger.info("Analyzing %s v%s", name, version)
     signals = extract_only(name, version, work_dir)
     snippets = signals.get("build_rs", {}).get("flagged_snippets") or []
-    classification = classify_with_vote(build_prompt(signals, snippets))
+    try:
+        from crateshield.llm.rag import retrieve
+        retrieved_context = retrieve(signals, k=3)
+    except Exception as exc:
+        logger.warning(f"RAG retrieval failed: {exc}")
+        retrieved_context = []
+
+    classification = classify_with_vote(build_prompt(signals, snippets, retrieved_context=retrieved_context))
 
     result = {
         "crate": name,
         "version": version,
         "signals": signals,
+        "retrieved_evidence": retrieved_context,
         "classification": classification,
         "ground_truth": ground_truth_label,
         "correct": (

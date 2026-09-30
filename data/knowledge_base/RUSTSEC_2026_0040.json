@@ -1,0 +1,15 @@
+{
+  "id": "RUSTSEC-2026-0040",
+  "title": "Supply Chain Attack on tracing-ethers",
+  "source": "RustSec RUSTSEC-2026-0040",
+  "source_url": "",
+  "ecosystem": "crates.io",
+  "attack_category": "malicious",
+  "technical_mechanism": " -- # `tracing-ethers` was removed from crates.io due to malicious code The `tracing-ethers` crate attempted to exfiltrate ssh keys to an app hosted on `vercel.app` The malicious crate had 9 version published on 2026-03-09 approximately 5 days before removal and had no evidence of actual downloads. Ther",
+  "indicators": [
+    "tracing-ethers"
+  ],
+  "severity": "CRITICAL",
+  "summary": "A malicious package 'tracing-ethers' was discovered in the crates.io ecosystem. The attack involved malicious. Mechanism:  -- # `tracing-ethers` was removed from crates.io due to malicious code The `tracing-ethers` crate attempted to exfiltrate ssh keys to an app hosted on `vercel.app` The malicious crate had 9 version published on 2026-03-09 approximately 5 days before removal and had no evidence of actual downloads. Ther",
+  "date": "2026-03-14"
+}

@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY_1=${GEMINI_API_KEY_1:-""}
+      - GEMINI_API_KEY_2=${GEMINI_API_KEY_2:-""}
+      - GEMINI_API_KEY_3=${GEMINI_API_KEY_3:-""}
+      - GEMINI_API_KEY_4=${GEMINI_API_KEY_4:-""}
+      - GEMINI_API_KEY_5=${GEMINI_API_KEY_5:-""}
+    volumes:
+      # Mount data folder to persist caching and results
+      - ./data:/app/data
+
+  frontend:
+    build:
+      context: ./webapp
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
