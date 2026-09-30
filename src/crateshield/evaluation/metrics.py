@@ -51,14 +51,8 @@ def compute_metrics(
 def print_ablation_table(metrics: dict) -> None:
     print(f"\n{'Condition':<25} {'Precision':>10} {'Recall':>10} {'F1':>10} {'FPR':>10} {'PR-AUC':>10} {'MCC':>10}")
     print("-" * 88)
-    labels = {
-        "condition_a": "A: Structured + LLM",
-        "condition_b": "B: Raw LLM Baseline",
-        "condition_c": "C: cargo-audit",
-    }
     # Ablation script has updated keys:
-    for key in metrics.keys():
-        m = metrics[key]
+    for key, m in metrics.items():
         print(
             f"{key:<25} {m['precision']:>10.3f} {m['recall']:>10.3f} "
             f"{m['f1']:>10.3f} {m['fpr']:>10.3f} {m.get('pr_auc', 0):>10.3f} {m.get('mcc', 0):>10.3f}"

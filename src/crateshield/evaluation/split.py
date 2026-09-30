@@ -78,8 +78,7 @@ def perform_split(val_ratio=0.15, test_ratio=0.15, seed=42):
     def write_jsonl(path, data):
         random.shuffle(data) # Shuffle final sets
         with open(path, "w", encoding="utf-8") as f:
-            for row in data:
-                f.write(json.dumps(row) + "\n")
+            f.writelines(json.dumps(row) + "\n" for row in data)
         logger.info(f"Wrote {len(data)} records to {path.name}")
         
     write_jsonl(DISTILL_DIR / "train.jsonl", train_out)
