@@ -15,13 +15,16 @@ _MODEL = None
 _CORPUS_EMBEDDINGS = None
 _CORPUS_DOCS = None
 
+
 def _get_model():
     global _MODEL
     if _MODEL is None:
         from sentence_transformers import SentenceTransformer
+
         logger.info("Loading sentence-transformers/all-MiniLM-L6-v2...")
         _MODEL = SentenceTransformer("all-MiniLM-L6-v2")
     return _MODEL
+
 
 def _load_corpus():
     global _CORPUS_EMBEDDINGS, _CORPUS_DOCS
@@ -34,7 +37,7 @@ def _load_corpus():
 
     docs = []
     texts_to_embed = []
-    
+
     for f in KB_DIR.glob("*.json"):
         try:
             doc = json.loads(f.read_text(encoding="utf-8"))
@@ -54,7 +57,10 @@ def _load_corpus():
             with open(EMBEDDINGS_CACHE, "rb") as f:
                 cache = pickle.load(f)
             # Basic cache validation
-            if len(cache["docs"]) == len(docs) and cache["docs"][0]["id"] == docs[0]["id"]:
+            if (
+                len(cache["docs"]) == len(docs)
+                and cache["docs"][0]["id"] == docs[0]["id"]
+            ):
                 _CORPUS_EMBEDDINGS = cache["embeddings"]
                 _CORPUS_DOCS = cache["docs"]
                 return _CORPUS_EMBEDDINGS, _CORPUS_DOCS
@@ -64,16 +70,17 @@ def _load_corpus():
     model = _get_model()
     logger.info(f"Computing embeddings for {len(docs)} KB documents...")
     embeddings = model.encode(texts_to_embed, convert_to_numpy=True)
-    
+
     # Save cache
     EMBEDDINGS_CACHE.parent.mkdir(parents=True, exist_ok=True)
     with open(EMBEDDINGS_CACHE, "wb") as f:
         pickle.dump({"embeddings": embeddings, "docs": docs}, f)
-        
+
     _CORPUS_EMBEDDINGS = embeddings
     _CORPUS_DOCS = docs
-    
+
     return _CORPUS_EMBEDDINGS, _CORPUS_DOCS
+
 
 def generate_nl_query(signals: dict) -> str:
     parts = []
@@ -82,27 +89,28 @@ def generate_nl_query(signals: dict) -> str:
         parts.append("contains custom build script")
         for s in build_rs.get("signals", []):
             parts.append(s.replace("_", " "))
-            
+
     unsafe = signals.get("unsafe_ffi", {})
     if unsafe.get("unsafe_per_kloc", 0) > 10:
         parts.append("high unsafe block density")
     if unsafe.get("ffi_declarations"):
         parts.append("contains FFI declarations")
-        
+
     pm = signals.get("proc_macro", {})
     if pm.get("is_proc_macro"):
         parts.append("is a procedural macro")
         if pm.get("proc_macro_suspicious_imports"):
             parts.append("suspicious procedural macro imports")
-            
+
     ts = signals.get("typosquatting", {})
     if ts.get("flagged"):
         parts.append(f"typosquats popular crate {ts.get('target')}")
-        
+
     if not parts:
         return "Rust crate with standard behavior."
-        
+
     return f"Rust crate {', '.join(parts)}."
+
 
 def retrieve(signals: dict, k: int = 3) -> list[dict]:
     corpus_emb, docs = _load_corpus()
@@ -110,14 +118,14 @@ def retrieve(signals: dict, k: int = 3) -> list[dict]:
         return []
 
     from sklearn.metrics.pairwise import cosine_similarity
-    
+
     query_text = generate_nl_query(signals)
     model = _get_model()
     query_emb = model.encode([query_text], convert_to_numpy=True)
-    
+
     sims = cosine_similarity(query_emb, corpus_emb)[0]
     top_indices = np.argsort(sims)[::-1][:k]
-    
+
     results = []
     for idx in top_indices:
         # thresholding
@@ -125,5 +133,5 @@ def retrieve(signals: dict, k: int = 3) -> list[dict]:
             doc = docs[idx].copy()
             doc["similarity_score"] = float(sims[idx])
             results.append(doc)
-            
+
     return results

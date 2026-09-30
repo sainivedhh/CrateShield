@@ -79,28 +79,41 @@ def analyze_build_rs(files: dict, parser) -> dict:
         args = _string_args(src, node)
         hit = False
 
-        if any(name.endswith(c.split("::")[-1]) and c.split("::")[0] in name for c in NETWORK_CALLEES) or any(
-            ident in name for ident in NETWORK_IDENTIFIERS
-        ):
+        if any(
+            name.endswith(c.split("::")[-1]) and c.split("::")[0] in name
+            for c in NETWORK_CALLEES
+        ) or any(ident in name for ident in NETWORK_IDENTIFIERS):
             result["network_calls"].append(name + (f"({args[0]})" if args else ""))
             signals.add("network_call")
             hit = True
 
-        if any(name.endswith(c.split("::")[-1]) for c in PROCESS_CALLEES) or "Command" in name:
+        if (
+            any(name.endswith(c.split("::")[-1]) for c in PROCESS_CALLEES)
+            or "Command" in name
+        ):
             result["process_spawns"].append(name + (f"({args[0]})" if args else ""))
             signals.add("process_spawn")
             hit = True
 
-        if any(k in name for k in ("fs::write", "File::create", "OpenOptions", "BufWriter")):
+        if any(
+            k in name for k in ("fs::write", "File::create", "OpenOptions", "BufWriter")
+        ):
             result["file_writes"].append(name + (f"({args[0]})" if args else ""))
             signals.add("file_write")
             hit = True
 
-        if any(name.endswith(c.split("::")[-1]) for c in ENV_CALLEES) or "env::var" in name:
+        if (
+            any(name.endswith(c.split("::")[-1]) for c in ENV_CALLEES)
+            or "env::var" in name
+        ):
             key = args[0] if args else ""
             result["env_reads"].append(key or name)
-            if key and key not in BENIGN_ENV_KEYS and any(
-                key.startswith(p) or p in key.upper() for p in SENSITIVE_ENV_KEYS
+            if (
+                key
+                and key not in BENIGN_ENV_KEYS
+                and any(
+                    key.startswith(p) or p in key.upper() for p in SENSITIVE_ENV_KEYS
+                )
             ):
                 result["sensitive_env_reads"].append(key)
                 signals.add("sensitive_env_var_read")

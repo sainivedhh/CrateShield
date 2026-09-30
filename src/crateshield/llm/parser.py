@@ -31,7 +31,10 @@ def parse_llm_response(text: str) -> dict:
     result.setdefault("reasoning", "")
     if result.get("recommended_action") not in ALLOWED_ACTION:
         result["recommended_action"] = (
-            "Block" if result["classification"] == "MALICIOUS" else
-            "Manual review" if result["classification"] == "SUSPICIOUS" else "Pass"
+            "Block"
+            if result["classification"] == "MALICIOUS"
+            else "Manual review"
+            if result["classification"] == "SUSPICIOUS"
+            else "Pass"
         )
     return result

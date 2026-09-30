@@ -2,7 +2,14 @@ from __future__ import annotations
 
 import re
 
-SUSPICIOUS_IMPORTS = ("std::process", "std::net", "std::os::raw", "reqwest", "ureq", "std::fs")
+SUSPICIOUS_IMPORTS = (
+    "std::process",
+    "std::net",
+    "std::os::raw",
+    "reqwest",
+    "ureq",
+    "std::fs",
+)
 
 
 def analyze_proc_macro(files: dict) -> dict:
@@ -20,5 +27,7 @@ def analyze_proc_macro(files: dict) -> dict:
     return {
         "is_proc_macro": is_pm,
         "proc_macro_suspicious_imports": suspicious,
-        "proc_macro_consistency_score": None if not is_pm else (0.2 if suspicious else 0.8),
+        "proc_macro_consistency_score": None
+        if not is_pm
+        else (0.2 if suspicious else 0.8),
     }

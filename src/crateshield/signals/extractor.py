@@ -21,6 +21,7 @@ from crateshield.signals.unsafe_ffi import analyze_unsafe_ffi
 from crateshield.signals.network import analyze_network
 from crateshield.signals.process_execution import analyze_process_execution
 from crateshield.signals.credentials import analyze_credentials
+
 logger = logging.getLogger(__name__)
 
 _PARSER: Parser | None = None
@@ -50,7 +51,9 @@ def _load_top_crate_names() -> list[str]:
 
     try:
         crates = fetch_top_crates(_TOP_CRATES_N)
-        names = [c.get("id") or c.get("name") for c in crates if c.get("id") or c.get("name")]
+        names = [
+            c.get("id") or c.get("name") for c in crates if c.get("id") or c.get("name")
+        ]
         WORK_DIR.mkdir(parents=True, exist_ok=True)
         _TOP_CRATES_CACHE_FILE.write_text(
             json.dumps({"fetched_at": time.time(), "names": names}), encoding="utf-8"
@@ -60,7 +63,9 @@ def _load_top_crate_names() -> list[str]:
         logger.warning("Could not fetch top crates for typosquat check: %s", exc)
         if _TOP_CRATES_CACHE_FILE.exists():
             try:
-                return json.loads(_TOP_CRATES_CACHE_FILE.read_text(encoding="utf-8"))["names"]
+                return json.loads(_TOP_CRATES_CACHE_FILE.read_text(encoding="utf-8"))[
+                    "names"
+                ]
             except Exception:
                 pass
         return []

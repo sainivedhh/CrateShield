@@ -12,7 +12,11 @@ def run_cargo_audit(crate_dir: Path) -> dict:
     """
     exe = shutil.which("cargo-audit") or shutil.which("cargo")
     if not exe:
-        return {"available": False, "prediction": "BENIGN", "raw": "cargo-audit not installed"}
+        return {
+            "available": False,
+            "prediction": "BENIGN",
+            "raw": "cargo-audit not installed",
+        }
 
     cmd = ["cargo", "audit"] if Path(exe).name == "cargo" else [exe]
     try:

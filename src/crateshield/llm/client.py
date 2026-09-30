@@ -25,6 +25,7 @@ _keys = list(set(_keys))  # Deduplicate
 _key_idx = 0
 _key_lock = threading.Lock()
 
+
 def _client() -> genai.Client:
     global _key_idx
     with _key_lock:
@@ -67,12 +68,14 @@ def query_gemini(messages: list[dict], model: str | None = None) -> str:
             return response.text or ""
         except APIError as e:
             if e.code == 429:
-                delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
-                print(f"[429 Quota Exceeded] Retrying in {delay:.1f}s... (Attempt {attempt+1}/{max_retries})")
+                delay = base_delay * (2**attempt) + random.uniform(0, 1)
+                print(
+                    f"[429 Quota Exceeded] Retrying in {delay:.1f}s... (Attempt {attempt + 1}/{max_retries})"
+                )
                 time.sleep(delay)
             else:
                 raise e
-    
+
     raise RuntimeError("Max retries exceeded for Gemini API")
 
 

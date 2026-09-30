@@ -5,7 +5,13 @@ from pathlib import Path
 
 import requests
 
-from crateshield.config import CRATES_API, CRATES_STATIC, RAW_DIR, USER_AGENT, ensure_dirs
+from crateshield.config import (
+    CRATES_API,
+    CRATES_STATIC,
+    RAW_DIR,
+    USER_AGENT,
+    ensure_dirs,
+)
 
 logger = logging.getLogger(__name__)
 _SESSION = requests.Session()

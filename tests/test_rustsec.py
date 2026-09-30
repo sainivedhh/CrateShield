@@ -2,6 +2,7 @@
 
 These tests mock the crates.io versions API so they run without network access.
 """
+
 from __future__ import annotations
 
 import json
@@ -35,7 +36,7 @@ os = ["linux", "windows"]
 CRATES_IO_VERSIONS_RESPONSE = {
     "versions": [
         {"num": "1.0.1", "yanked": False},
-        {"num": "1.0.0", "yanked": True},   # <-- the malicious yanked release
+        {"num": "1.0.0", "yanked": True},  # <-- the malicious yanked release
         {"num": "0.9.0", "yanked": False},
     ]
 }
@@ -51,6 +52,7 @@ CRATES_IO_NO_YANKED_RESPONSE = {
 # ---------------------------------------------------------------------------
 # Tests for _resolve_yanked_version
 # ---------------------------------------------------------------------------
+
 
 class TestResolveMaliciousVersion:
     def test_returns_yanked_version_from_registry(self):
@@ -125,6 +127,7 @@ class TestResolveMaliciousVersion:
 # Tests for fetch_malicious_advisories (with mocked HTTP)
 # ---------------------------------------------------------------------------
 
+
 class TestFetchMaliciousAdvisories:
     def _make_advisory_raw_response(self, toml: str) -> str:
         """Wrap TOML in a markdown code fence as the RustSec advisory format expects."""
@@ -141,11 +144,19 @@ class TestFetchMaliciousAdvisories:
 
         # Mock the two-level API: crates listing -> per-crate listing -> raw advisory
         mock_session.get.side_effect = [
-            MagicMock(json=lambda: [{"type": "dir", "url": "http://api/evil"}],
-                      raise_for_status=lambda: None),
-            MagicMock(json=lambda: [{"name": "RUSTSEC-2024-0001.md",
-                                     "path": "crates/evil/RUSTSEC-2024-0001.md"}],
-                      raise_for_status=lambda: None),
+            MagicMock(
+                json=lambda: [{"type": "dir", "url": "http://api/evil"}],
+                raise_for_status=lambda: None,
+            ),
+            MagicMock(
+                json=lambda: [
+                    {
+                        "name": "RUSTSEC-2024-0001.md",
+                        "path": "crates/evil/RUSTSEC-2024-0001.md",
+                    }
+                ],
+                raise_for_status=lambda: None,
+            ),
             MagicMock(text=raw_md, raise_for_status=lambda: None),
         ]
 
@@ -163,11 +174,19 @@ class TestFetchMaliciousAdvisories:
         raw_md = self._make_advisory_raw_response(toml)
 
         mock_session.get.side_effect = [
-            MagicMock(json=lambda: [{"type": "dir", "url": "http://api/info-crate"}],
-                      raise_for_status=lambda: None),
-            MagicMock(json=lambda: [{"name": "RUSTSEC-2024-0002.md",
-                                     "path": "crates/info-crate/RUSTSEC-2024-0002.md"}],
-                      raise_for_status=lambda: None),
+            MagicMock(
+                json=lambda: [{"type": "dir", "url": "http://api/info-crate"}],
+                raise_for_status=lambda: None,
+            ),
+            MagicMock(
+                json=lambda: [
+                    {
+                        "name": "RUSTSEC-2024-0002.md",
+                        "path": "crates/info-crate/RUSTSEC-2024-0002.md",
+                    }
+                ],
+                raise_for_status=lambda: None,
+            ),
             MagicMock(text=raw_md, raise_for_status=lambda: None),
         ]
 
@@ -184,11 +203,19 @@ class TestFetchMaliciousAdvisories:
         raw_md = self._make_advisory_raw_response(toml)
 
         mock_session.get.side_effect = [
-            MagicMock(json=lambda: [{"type": "dir", "url": "http://api/safe"}],
-                      raise_for_status=lambda: None),
-            MagicMock(json=lambda: [{"name": "RUSTSEC-2024-0003.md",
-                                     "path": "crates/safe/RUSTSEC-2024-0003.md"}],
-                      raise_for_status=lambda: None),
+            MagicMock(
+                json=lambda: [{"type": "dir", "url": "http://api/safe"}],
+                raise_for_status=lambda: None,
+            ),
+            MagicMock(
+                json=lambda: [
+                    {
+                        "name": "RUSTSEC-2024-0003.md",
+                        "path": "crates/safe/RUSTSEC-2024-0003.md",
+                    }
+                ],
+                raise_for_status=lambda: None,
+            ),
             MagicMock(text=raw_md, raise_for_status=lambda: None),
         ]
 

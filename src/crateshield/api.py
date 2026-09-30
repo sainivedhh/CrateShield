@@ -28,6 +28,7 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 _xgb_model: xgb.XGBClassifier | None = None
 
+
 @app.on_event("startup")
 def _load_models():
     global _xgb_model
@@ -72,7 +73,9 @@ def get_crate_metadata(name: str):
     try:
         meta = fetch_crate_metadata(name)
     except Exception as exc:
-        raise HTTPException(status_code=404, detail=f"Crate '{name}' not found on crates.io ({exc})") from exc
+        raise HTTPException(
+            status_code=404, detail=f"Crate '{name}' not found on crates.io ({exc})"
+        ) from exc
     crate = meta.get("crate", {})
     return {
         "name": crate.get("id"),
@@ -85,8 +88,12 @@ def get_crate_metadata(name: str):
         "created_at": crate.get("created_at"),
         "updated_at": crate.get("updated_at"),
         "versions_count": len(meta.get("versions", [])),
-        "yanked_versions": [v["num"] for v in meta.get("versions", []) if v.get("yanked")],
-        "keywords": [k.get("id") for k in meta.get("keywords", [])] if meta.get("keywords") else [],
+        "yanked_versions": [
+            v["num"] for v in meta.get("versions", []) if v.get("yanked")
+        ],
+        "keywords": [k.get("id") for k in meta.get("keywords", [])]
+        if meta.get("keywords")
+        else [],
     }
 
 
@@ -104,9 +111,14 @@ def predict(name: str, version: str | None = None):
             meta = fetch_crate_metadata(name)
             version = meta.get("crate", {}).get("max_version")
         except Exception as exc:
-            raise HTTPException(status_code=404, detail=f"Could not resolve latest version for '{name}' ({exc})") from exc
+            raise HTTPException(
+                status_code=404,
+                detail=f"Could not resolve latest version for '{name}' ({exc})",
+            ) from exc
         if not version:
-            raise HTTPException(status_code=404, detail=f"No published version found for '{name}'")
+            raise HTTPException(
+                status_code=404, detail=f"No published version found for '{name}'"
+            )
 
     # -----------------------------------------------------------------------
     # Cache hit: if signals already extracted, skip download + tree-sitter
@@ -118,7 +130,9 @@ def predict(name: str, version: str | None = None):
         try:
             signals = extract_only(name, version)
         except Exception as exc:
-            raise HTTPException(status_code=422, detail=f"Failed to fetch/parse {name}@{version}: {exc}") from exc
+            raise HTTPException(
+                status_code=422, detail=f"Failed to fetch/parse {name}@{version}: {exc}"
+            ) from exc
 
     risk = assess_risk(signals)
 
@@ -127,16 +141,22 @@ def predict(name: str, version: str | None = None):
         try:
             X_pred = np.array([extract_features(signals)])
             probabilities = _xgb_model.predict_proba(X_pred)[0]
-            malicious_index = list(_xgb_model.classes_).index(1) if 1 in _xgb_model.classes_ else 0
+            malicious_index = (
+                list(_xgb_model.classes_).index(1) if 1 in _xgb_model.classes_ else 0
+            )
             importance_dict = _xgb_model.get_booster().get_score(importance_type="gain")
             importances = [
                 {"feature": FEATURE_NAMES[int(k[1:])], "importance": float(v)}
                 for k, v in importance_dict.items()
-                if k.startswith("f") and k[1:].isdigit() and int(k[1:]) < len(FEATURE_NAMES)
+                if k.startswith("f")
+                and k[1:].isdigit()
+                and int(k[1:]) < len(FEATURE_NAMES)
             ]
             risk["model"] = {
                 "malicious_probability": float(probabilities[malicious_index]),
-                "feature_importances": sorted(importances, key=lambda x: x["importance"], reverse=True),
+                "feature_importances": sorted(
+                    importances, key=lambda x: x["importance"], reverse=True
+                ),
             }
         except Exception as exc:
             print(f"Warning: XGBoost inference failed: {exc}")
@@ -155,12 +175,15 @@ def run_command(req: RunRequest):
     try:
         if req.command == "ingest-rustsec":
             from crateshield.ingestion.rustsec import main as ingest_main
+
             ingest_main()
         elif req.command == "ablation":
             from crateshield.evaluation.ablation import main as ablation_main
+
             ablation_main()
         else:
             from crateshield.evaluation.train import train_and_evaluate_xgb
+
             dataset = WORK_DIR / "dataset.json"
             if not dataset.exists():
                 dataset = WORK_DIR / "dataset_mini.json"

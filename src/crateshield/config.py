@@ -20,9 +20,7 @@ USER_AGENT = os.getenv(
 )
 CRATES_STATIC = "https://static.crates.io/crates"
 CRATES_API = "https://crates.io/api/v1/crates"
-RUSTSEC_RAW = (
-    "https://raw.githubusercontent.com/rustsec/advisory-db/main/crates"
-)
+RUSTSEC_RAW = "https://raw.githubusercontent.com/rustsec/advisory-db/main/crates"
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
 TEMPERATURE = 0.0
 LLM_VOTES = 3
@@ -33,14 +31,33 @@ TYPOSQUAT_THRESHOLD = 0.85
 TYPOSQUAT_MAX_DISTANCE = 2
 
 SENSITIVE_ENV_KEYS = (
-    "AWS_", "GITHUB_TOKEN", "GH_TOKEN", "SSH_", "CARGO_REGISTRY_TOKEN",
-    "NPM_TOKEN", "PYPI_TOKEN", "PRIVATE_KEY", "SECRET", "PASSWORD",
-    "API_KEY", "ACCESS_KEY", "TOKEN",
+    "AWS_",
+    "GITHUB_TOKEN",
+    "GH_TOKEN",
+    "SSH_",
+    "CARGO_REGISTRY_TOKEN",
+    "NPM_TOKEN",
+    "PYPI_TOKEN",
+    "PRIVATE_KEY",
+    "SECRET",
+    "PASSWORD",
+    "API_KEY",
+    "ACCESS_KEY",
+    "TOKEN",
 )
 BENIGN_ENV_KEYS = {
-    "OUT_DIR", "CARGO_MANIFEST_DIR", "CARGO_PKG_NAME", "CARGO_PKG_VERSION",
-    "CARGO_CFG_TARGET_OS", "CARGO_CFG_TARGET_ARCH", "TARGET", "HOST",
-    "OPT_LEVEL", "PROFILE", "NUM_JOBS", "CARGO_FEATURE_",
+    "OUT_DIR",
+    "CARGO_MANIFEST_DIR",
+    "CARGO_PKG_NAME",
+    "CARGO_PKG_VERSION",
+    "CARGO_CFG_TARGET_OS",
+    "CARGO_CFG_TARGET_ARCH",
+    "TARGET",
+    "HOST",
+    "OPT_LEVEL",
+    "PROFILE",
+    "NUM_JOBS",
+    "CARGO_FEATURE_",
 }
 
 

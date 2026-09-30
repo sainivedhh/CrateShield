@@ -37,7 +37,12 @@ Reasoning: cc is a C compiler driver; spawning a compiler from build.rs is the c
 """
 
 
-def build_prompt(signals: dict, snippets: list[str] | None = None, raw_source: str | None = None, retrieved_context: list[dict] | None = None) -> list[dict]:
+def build_prompt(
+    signals: dict,
+    snippets: list[str] | None = None,
+    raw_source: str | None = None,
+    retrieved_context: list[dict] | None = None,
+) -> list[dict]:
     user = "Analyze this crate and classify it. Cite specific signals.\n\n"
     if raw_source is not None:
         user += "Raw source (truncated):\n" + raw_source + "\n"
@@ -45,7 +50,7 @@ def build_prompt(signals: dict, snippets: list[str] | None = None, raw_source: s
         user += "Crate signals:\n" + json.dumps(signals, indent=2) + "\n"
         if snippets:
             user += "\nFlagged snippets:\n" + "\n---\n".join(snippets)
-            
+
     if retrieved_context:
         user += "\n\nRelevant historical context (Known Incidents):\n"
         for ctx in retrieved_context:

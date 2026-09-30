@@ -30,13 +30,15 @@ def _session() -> requests.Session:
         total=5,
         backoff_factor=1,
         status_forcelist=[429, 500, 502, 503, 504],
-        allowed_methods=["HEAD", "GET", "OPTIONS"]
+        allowed_methods=["HEAD", "GET", "OPTIONS"],
     )
     adapter = HTTPAdapter(max_retries=retry_strategy)
     s.mount("https://", adapter)
     s.mount("http://", adapter)
 
-    s.headers.update({"User-Agent": USER_AGENT, "Accept": "application/vnd.github+json"})
+    s.headers.update(
+        {"User-Agent": USER_AGENT, "Accept": "application/vnd.github+json"}
+    )
     token = os.getenv("GITHUB_TOKEN")
     if token:
         s.headers["Authorization"] = f"Bearer {token}"
@@ -99,7 +101,9 @@ def _resolve_from_sparse_index(name: str, session: requests.Session) -> str | No
         # Fall back to most-recently published version (crate deleted before yank)
         if entries:
             ver = entries[-1]["vers"]
-            logger.info("Sparse-index: no yanked version; using newest %s for %s", ver, name)
+            logger.info(
+                "Sparse-index: no yanked version; using newest %s for %s", ver, name
+            )
             return ver
 
     except Exception as exc:
@@ -138,7 +142,9 @@ def _cdn_version_exists(name: str, version: str, session: requests.Session) -> b
         return False
 
 
-def resolve_malicious_version(name: str, advisory: dict, session: requests.Session) -> str | None:
+def resolve_malicious_version(
+    name: str, advisory: dict, session: requests.Session
+) -> str | None:
     """Three-strategy version resolution for malicious crates.
 
     Strategy 1 – Registry API: query /api/v1/crates/{name}/versions for yanked entries.
@@ -151,16 +157,23 @@ def resolve_malicious_version(name: str, advisory: dict, session: requests.Sessi
 
     # ── Strategy 1: registry API ──────────────────────────────────────────────
     try:
-        resp = session.get(f"{CRATES_IO_API}/{name}/versions", headers=headers, timeout=30)
+        resp = session.get(
+            f"{CRATES_IO_API}/{name}/versions", headers=headers, timeout=30
+        )
         if resp.status_code == 200:
             versions = resp.json().get("versions", [])
             yanked = [v["num"] for v in versions if v.get("yanked")]
             if yanked:
-                logger.info("[S1] Registry API: yanked version %s for %s", yanked[0], name)
+                logger.info(
+                    "[S1] Registry API: yanked version %s for %s", yanked[0], name
+                )
                 return yanked[0]
             if versions:
-                logger.info("[S1] Registry API: no yanked; using newest %s for %s",
-                            versions[0]["num"], name)
+                logger.info(
+                    "[S1] Registry API: no yanked; using newest %s for %s",
+                    versions[0]["num"],
+                    name,
+                )
                 return versions[0]["num"]
     except Exception as exc:
         logger.debug("[S1] Registry API failed for %s: %s", name, exc)
@@ -190,15 +203,18 @@ def fetch_malicious_advisories(session: requests.Session | None = None) -> list[
     out: list[dict] = []
 
     for entry in crates.json():
-        if entry.get("type") != "dir": continue
+        if entry.get("type") != "dir":
+            continue
         listing = s.get(entry["url"], timeout=30)
         listing.raise_for_status()
         for f in listing.json():
-            if not f["name"].endswith(".md"): continue
+            if not f["name"].endswith(".md"):
+                continue
             raw = s.get(f"{ADVISORY_RAW}/{f['path']}", timeout=30)
             raw.raise_for_status()
             m = re.search(r"```toml\s*(.*?)```", raw.text, re.S)
-            if not m: continue
+            if not m:
+                continue
             try:
                 parsed = tomllib.loads(m.group(1))
             except tomllib.TOMLDecodeError as e:
@@ -217,7 +233,13 @@ def fetch_malicious_advisories(session: requests.Session | None = None) -> list[
             cats = set(adv.get("categories") or [])
             kwds = set(adv.get("keywords") or [])
             combined_tags = cats | kwds
-            malicious_tags = {"malicious", "backdoor", "malicious-code", "malware", "typosquatting"}
+            malicious_tags = {
+                "malicious",
+                "backdoor",
+                "malicious-code",
+                "malware",
+                "typosquatting",
+            }
 
             is_informational = bool(adv.get("informational"))
 
@@ -225,26 +247,41 @@ def fetch_malicious_advisories(session: requests.Session | None = None) -> list[
                 adv["path"] = f["path"]
                 adv["categories"] = list(combined_tags & malicious_tags)
                 out.append(adv)
-                logger.info("Labeled Malicious %s (%s)", adv.get("package"), adv.get("id"))
-                
+                logger.info(
+                    "Labeled Malicious %s (%s)", adv.get("package"), adv.get("id")
+                )
+
     # Inject missing August 2026 malicious crates (hard ceiling workaround)
-    aug_2026 = ["proc-macro1", "proc-macro-en", "aovine", "arone", "aronenao", "tinymember"]
+    aug_2026 = [
+        "proc-macro1",
+        "proc-macro-en",
+        "aovine",
+        "arone",
+        "aronenao",
+        "tinymember",
+    ]
     existing = {a.get("package") for a in out}
     for crate in aug_2026:
         if crate not in existing:
-            out.append({
-                "package": crate,
-                "id": "AUG-2026-MANUAL",
-                "categories": ["malicious", "manual-injection"],
-                "url": f"https://crates.io/crates/{crate}",
-                "versions": {"patched": []} # Will trigger fallback to 0.1.0 or yanked
-            })
+            out.append(
+                {
+                    "package": crate,
+                    "id": "AUG-2026-MANUAL",
+                    "categories": ["malicious", "manual-injection"],
+                    "url": f"https://crates.io/crates/{crate}",
+                    "versions": {
+                        "patched": []
+                    },  # Will trigger fallback to 0.1.0 or yanked
+                }
+            )
             logger.info("Labeled Malicious (Manual Inject) %s", crate)
 
     return out
 
 
-def fetch_benign_crates(session: requests.Session | None = None, count: int = 300) -> list[dict]:
+def fetch_benign_crates(
+    session: requests.Session | None = None, count: int = 300
+) -> list[dict]:
     """Stratified benign sampling across popularity tiers.
 
     Sampling only from the top-N most-downloaded crates biases the model
@@ -263,20 +300,32 @@ def fetch_benign_crates(session: requests.Session | None = None, count: int = 30
     def _add(c: dict):
         if c["id"] not in seen:
             seen.add(c["id"])
-            crates.append({
-                "package": c["id"],
-                "version": c["max_version"],
-                "label": "BENIGN",
-                "id": "crates.io-top",
-                "categories": ["none"],
-                "url": f"https://crates.io/crates/{c['id']}",
-            })
+            crates.append(
+                {
+                    "package": c["id"],
+                    "version": c["max_version"],
+                    "label": "BENIGN",
+                    "id": "crates.io-top",
+                    "categories": ["none"],
+                    "url": f"https://crates.io/crates/{c['id']}",
+                }
+            )
 
     # Known legitimate crates that use build.rs / unsafe / FFI heavily —
     # anchors so the model sees these signals fire on benign code too.
     build_rs_anchors = [
-        "cc", "openssl-sys", "pyo3", "libc", "ring", "bindgen", "rusqlite",
-        "curl-sys", "zstd-sys", "lzma-sys", "libsqlite3-sys", "prost-build",
+        "cc",
+        "openssl-sys",
+        "pyo3",
+        "libc",
+        "ring",
+        "bindgen",
+        "rusqlite",
+        "curl-sys",
+        "zstd-sys",
+        "lzma-sys",
+        "libsqlite3-sys",
+        "prost-build",
     ]
     for name in build_rs_anchors:
         try:
@@ -289,16 +338,22 @@ def fetch_benign_crates(session: requests.Session | None = None, count: int = 30
     # Tier allocation: 50% top-popularity, 30% mid-popularity, 20% long-tail.
     remaining = max(count - len(crates), 0)
     tiers = [
-        ("downloads", 1, int(remaining * 0.5)),        # most downloaded
-        ("downloads", 40, int(remaining * 0.3)),        # mid popularity (deep pages)
-        ("new", 1, remaining - int(remaining * 0.5) - int(remaining * 0.3)),  # long tail / recently published
+        ("downloads", 1, int(remaining * 0.5)),  # most downloaded
+        ("downloads", 40, int(remaining * 0.3)),  # mid popularity (deep pages)
+        (
+            "new",
+            1,
+            remaining - int(remaining * 0.5) - int(remaining * 0.3),
+        ),  # long tail / recently published
     ]
 
     for sort_key, start_page, tier_count in tiers:
         page = start_page
         fetched_this_tier = 0
         while fetched_this_tier < tier_count:
-            resp = s.get(url, params={"sort": sort_key, "per_page": 50, "page": page}, timeout=30)
+            resp = s.get(
+                url, params={"sort": sort_key, "per_page": 50, "page": page}, timeout=30
+            )
             resp.raise_for_status()
             batch = resp.json().get("crates", [])
             if not batch:
@@ -312,26 +367,34 @@ def fetch_benign_crates(session: requests.Session | None = None, count: int = 30
                     fetched_this_tier += 1
             page += 1
 
-    logger.info("Benign sample: %d crates across popularity tiers + %d build.rs anchors",
-                len(crates), len(build_rs_anchors))
+    logger.info(
+        "Benign sample: %d crates across popularity tiers + %d build.rs anchors",
+        len(crates),
+        len(build_rs_anchors),
+    )
     return crates
 
 
 from crateshield.ingestion.ossf import fetch_ossf_crates
 from crateshield.ingestion.crates_dump import sample_stratified_benign
 
+
 def build_full_dataset(dest: Path, benign_count: int = 2000) -> dict:
     s = _session()
     malicious = fetch_malicious_advisories(s)
-    
+
     # Merge OSSF malicious crates
     ossf_malicious = fetch_ossf_crates()
     for o in ossf_malicious:
         if not any(a.get("package") == o.get("package") for a in malicious):
             malicious.append(o)
-            
+
     # Try stratified benign sampling; fallback to API if fails
-    benign = sample_stratified_benign(top_n=int(benign_count*0.5), mid_n=int(benign_count*0.3), tail_n=int(benign_count*0.2))
+    benign = sample_stratified_benign(
+        top_n=int(benign_count * 0.5),
+        mid_n=int(benign_count * 0.3),
+        tail_n=int(benign_count * 0.2),
+    )
     if not benign:
         logger.warning("crates_dump failed to sample; falling back to API fetch")
         benign = fetch_benign_crates(s, count=benign_count)
@@ -352,39 +415,49 @@ def build_full_dataset(dest: Path, benign_count: int = 2000) -> dict:
         if version is None:
             logger.warning(
                 "SKIPPED malicious crate %s (%s): all version resolution strategies failed",
-                name, a.get("id"),
+                name,
+                a.get("id"),
             )
             skipped_no_version += 1
             continue
 
         resolved_count += 1
-        crates.append({
-            "name": name,
-            "version": version,
-            "label": "MALICIOUS",
-            "source": "ossf" if "ossf" in (a.get("categories") or []) else "rustsec",
-            "is_synthetic": False,
-            "label_source": a.get("id"),
-            "attack_category": ",".join(a.get("categories") or []),
-            "url": a.get("url"),
-        })
+        crates.append(
+            {
+                "name": name,
+                "version": version,
+                "label": "MALICIOUS",
+                "source": "ossf"
+                if "ossf" in (a.get("categories") or [])
+                else "rustsec",
+                "is_synthetic": False,
+                "label_source": a.get("id"),
+                "attack_category": ",".join(a.get("categories") or []),
+                "url": a.get("url"),
+            }
+        )
 
     logger.info(
         "Malicious advisories: %d total → %d resolved, %d skipped (no name), %d skipped (no version)",
-        len(malicious), resolved_count, skipped_no_name, skipped_no_version,
+        len(malicious),
+        resolved_count,
+        skipped_no_name,
+        skipped_no_version,
     )
 
     for b in benign:
-        crates.append({
-            "name": b["package"],
-            "version": b["version"],
-            "label": "BENIGN",
-            "source": b.get("source", "crates.io-api"),
-            "is_synthetic": False,
-            "label_source": b.get("id", "crates_dump"),
-            "attack_category": "none",
-            "url": b["url"],
-        })
+        crates.append(
+            {
+                "name": b["package"],
+                "version": b["version"],
+                "label": "BENIGN",
+                "source": b.get("source", "crates.io-api"),
+                "is_synthetic": False,
+                "label_source": b.get("id", "crates_dump"),
+                "attack_category": "none",
+                "url": b["url"],
+            }
+        )
 
     n_malicious = sum(1 for c in crates if c["label"] == "MALICIOUS")
     n_benign = sum(1 for c in crates if c["label"] == "BENIGN")
@@ -392,11 +465,7 @@ def build_full_dataset(dest: Path, benign_count: int = 2000) -> dict:
     dataset = {
         "dataset_version": "0.4.0",
         "total_crates": len(crates),
-        "label_counts": {
-            "MALICIOUS": n_malicious,
-            "SUSPICIOUS": 0,
-            "BENIGN": n_benign
-        },
+        "label_counts": {"MALICIOUS": n_malicious, "SUSPICIOUS": 0, "BENIGN": n_benign},
         "build_stats": {
             "advisories_fetched": len(malicious),
             "resolved": resolved_count,

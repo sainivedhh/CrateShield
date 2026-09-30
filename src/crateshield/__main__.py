@@ -9,7 +9,9 @@ from crateshield.config import ROOT, WORK_DIR, ensure_dirs
 
 
 def main() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
+    logging.basicConfig(
+        level=logging.INFO, format="%(levelname)s %(name)s: %(message)s"
+    )
     p = argparse.ArgumentParser(prog="crateshield")
     sub = p.add_subparsers(dest="cmd", required=True)
 
@@ -21,32 +23,72 @@ def main() -> None:
     a.add_argument("--name", required=True)
     a.add_argument("--version", required=True)
 
-    r = sub.add_parser("ingest-rustsec", help="pull malicious and benign crates into dataset")
+    r = sub.add_parser(
+        "ingest-rustsec", help="pull malicious and benign crates into dataset"
+    )
     r.add_argument("--out", default=str(WORK_DIR / "dataset.json"))
-    r.add_argument("--benign-count", type=int, default=2000,
-                   help="Number of benign crates.io crates to sample (stratified across popularity tiers)")
+    r.add_argument(
+        "--benign-count",
+        type=int,
+        default=2000,
+        help="Number of benign crates.io crates to sample (stratified across popularity tiers)",
+    )
 
-    syn = sub.add_parser("generate-synthetic", help="Generate synthetic malicious crates and add them to dataset.json")
-    syn.add_argument("--count", type=int, default=400, help="Number of synthetic crates to generate")
-    syn.add_argument("--seed", type=int, default=42, help="RNG seed for reproducible fixtures")
+    syn = sub.add_parser(
+        "generate-synthetic",
+        help="Generate synthetic malicious crates and add them to dataset.json",
+    )
+    syn.add_argument(
+        "--count", type=int, default=400, help="Number of synthetic crates to generate"
+    )
+    syn.add_argument(
+        "--seed", type=int, default=42, help="RNG seed for reproducible fixtures"
+    )
     syn.add_argument("--dataset", default=str(WORK_DIR / "dataset.json"))
 
-    x = sub.add_parser("extract-dataset", help="run signal extraction for every crate in a dataset.json (required before train)")
+    x = sub.add_parser(
+        "extract-dataset",
+        help="run signal extraction for every crate in a dataset.json (required before train)",
+    )
     x.add_argument("--dataset", default=str(WORK_DIR / "dataset.json"))
 
-    s = sub.add_parser("severity-dataset", help="build a tabular CSV dataset with severity labels")
+    s = sub.add_parser(
+        "severity-dataset", help="build a tabular CSV dataset with severity labels"
+    )
     s.add_argument("--dataset", default=str(WORK_DIR / "dataset.json"))
 
     t = sub.add_parser("train", help="train local ML models")
     t.add_argument("--dataset", default=str(WORK_DIR / "dataset.json"))
-    t.add_argument("--model", choices=["rf", "xgboost", "both"], default="rf", help="which model to train")
-    t.add_argument("--target", choices=["binary", "severity"], default="binary", help="train binary (malicious/benign) or multiclass severity")
+    t.add_argument(
+        "--model",
+        choices=["rf", "xgboost", "both"],
+        default="rf",
+        help="which model to train",
+    )
+    t.add_argument(
+        "--target",
+        choices=["binary", "severity"],
+        default="binary",
+        help="train binary (malicious/benign) or multiclass severity",
+    )
 
-    p2 = sub.add_parser("predict", help="predict if a crate is malicious using an ML model")
+    p2 = sub.add_parser(
+        "predict", help="predict if a crate is malicious using an ML model"
+    )
     p2.add_argument("--name", required=True)
     p2.add_argument("--version", required=True)
-    p2.add_argument("--model", choices=["rf", "xgboost", "both"], default="rf", help="which model to predict with")
-    p2.add_argument("--target", choices=["binary", "severity"], default="binary", help="predict binary (malicious/benign) or multiclass severity")
+    p2.add_argument(
+        "--model",
+        choices=["rf", "xgboost", "both"],
+        default="rf",
+        help="which model to predict with",
+    )
+    p2.add_argument(
+        "--target",
+        choices=["binary", "severity"],
+        default="binary",
+        help="predict binary (malicious/benign) or multiclass severity",
+    )
 
     ab = sub.add_parser("ablation", help="A/B/C evaluation")
     ab.add_argument("--dataset", required=True)
@@ -57,16 +99,24 @@ def main() -> None:
 
     if args.cmd == "extract":
         from crateshield.pipeline import extract_only
+
         print(json.dumps(extract_only(args.name, args.version), indent=2))
     elif args.cmd == "analyze":
         from crateshield.pipeline import analyze_crate
+
         print(json.dumps(analyze_crate(args.name, args.version), indent=2))
     elif args.cmd == "ingest-rustsec":
         from crateshield.ingestion.rustsec import build_full_dataset
+
         ds = build_full_dataset(Path(args.out), benign_count=args.benign_count)
-        print(f"Wrote {ds['total_crates']} crates ({ds['label_counts']['MALICIOUS']} Malicious, {ds['label_counts']['BENIGN']} Benign) to {args.out}")
+        print(
+            f"Wrote {ds['total_crates']} crates ({ds['label_counts']['MALICIOUS']} Malicious, {ds['label_counts']['BENIGN']} Benign) to {args.out}"
+        )
     elif args.cmd == "generate-synthetic":
-        from crateshield.ingestion.synthetic import generate_synthetic_crates, SYNTHETIC_DIR
+        from crateshield.ingestion.synthetic import (
+            generate_synthetic_crates,
+            SYNTHETIC_DIR,
+        )
         from crateshield.pipeline import extract_local_crate
 
         # 1. Generate crates (returns actual folder/crate names -- these vary
@@ -75,7 +125,11 @@ def main() -> None:
 
         # 2. Extract signals
         dataset_path = Path(args.dataset)
-        dataset = json.loads(dataset_path.read_text(encoding="utf-8")) if dataset_path.exists() else {"crates": [], "label_counts": {"MALICIOUS": 0, "BENIGN": 0}}
+        dataset = (
+            json.loads(dataset_path.read_text(encoding="utf-8"))
+            if dataset_path.exists()
+            else {"crates": [], "label_counts": {"MALICIOUS": 0, "BENIGN": 0}}
+        )
 
         ok = 0
         for crate_name in crate_names:
@@ -84,16 +138,18 @@ def main() -> None:
                 extract_local_crate(crate_dir, crate_name)
                 # Add to dataset (avoid duplicates if re-running)
                 if not any(c["name"] == crate_name for c in dataset.get("crates", [])):
-                    dataset.setdefault("crates", []).append({
-                        "name": crate_name,
-                        "version": "0.1.0",
-                        "label": "MALICIOUS",
-                        "source": "synthetic",
-                        "is_synthetic": True,
-                        "label_source": "synthetic-generator",
-                        "attack_category": "synthetic",
-                        "url": "local"
-                    })
+                    dataset.setdefault("crates", []).append(
+                        {
+                            "name": crate_name,
+                            "version": "0.1.0",
+                            "label": "MALICIOUS",
+                            "source": "synthetic",
+                            "is_synthetic": True,
+                            "label_source": "synthetic-generator",
+                            "attack_category": "synthetic",
+                            "url": "local",
+                        }
+                    )
                     dataset.setdefault("label_counts", {}).setdefault("MALICIOUS", 0)
                     dataset["label_counts"]["MALICIOUS"] += 1
                 ok += 1
@@ -105,6 +161,7 @@ def main() -> None:
         print(f"Extracted and added {ok} synthetic crates to {args.dataset}")
     elif args.cmd == "extract-dataset":
         from crateshield.pipeline import extract_only
+
         dataset = json.loads(Path(args.dataset).read_text(encoding="utf-8"))
         ok, skipped, failed = 0, 0, 0
         for crate in dataset.get("crates", []):
@@ -118,18 +175,29 @@ def main() -> None:
             except Exception as exc:
                 failed += 1
                 print(f"  skip {name}@{version}: {exc}")
-        print(f"\nDone. {ok} extracted, {skipped} skipped (no resolvable version), {failed} failed downloads/parses.")
+        print(
+            f"\nDone. {ok} extracted, {skipped} skipped (no resolvable version), {failed} failed downloads/parses."
+        )
     elif args.cmd == "severity-dataset":
         from crateshield.evaluation.train import build_severity_dataset
         from crateshield.config import SIGNALS_DIR
+
         build_severity_dataset(Path(args.dataset), SIGNALS_DIR)
     elif args.cmd == "train":
-        from crateshield.evaluation.train import train_and_evaluate, train_and_evaluate_xgb, compare_models, train_severity_xgb
+        from crateshield.evaluation.train import (
+            train_and_evaluate,
+            train_and_evaluate_xgb,
+            compare_models,
+            train_severity_xgb,
+        )
         from crateshield.config import SIGNALS_DIR
+
         dataset_path = Path(args.dataset)
         if args.target == "severity":
             if args.model in ["rf", "both"]:
-                print("Note: Severity multiclass training is currently implemented for XGBoost only.")
+                print(
+                    "Note: Severity multiclass training is currently implemented for XGBoost only."
+                )
             train_severity_xgb(dataset_path, SIGNALS_DIR)
         else:
             if args.model == "rf":
@@ -138,21 +206,29 @@ def main() -> None:
                 train_and_evaluate_xgb(dataset_path, SIGNALS_DIR)
             elif args.model == "both":
                 compare_models(dataset_path, SIGNALS_DIR)
-            
+
     elif args.cmd == "predict":
-        from crateshield.evaluation.train import predict_crate, predict_crate_xgb, predict_severity
+        from crateshield.evaluation.train import (
+            predict_crate,
+            predict_crate_xgb,
+            predict_severity,
+        )
+
         if args.target == "severity":
             if args.model in ["rf", "both"]:
-                print("Note: Severity multiclass prediction is currently implemented for XGBoost only.")
+                print(
+                    "Note: Severity multiclass prediction is currently implemented for XGBoost only."
+                )
             predict_severity(args.name, args.version)
         else:
             if args.model in ("rf", "both"):
                 predict_crate(args.name, args.version)
             if args.model in ("xgboost", "both"):
                 predict_crate_xgb(args.name, args.version)
-            
+
     elif args.cmd == "ablation":
         from crateshield.evaluation.ablation import run_ablation
+
         result = run_ablation(Path(args.dataset), ROOT)
         Path(args.out).parent.mkdir(parents=True, exist_ok=True)
         Path(args.out).write_text(json.dumps(result, indent=2), encoding="utf-8")
