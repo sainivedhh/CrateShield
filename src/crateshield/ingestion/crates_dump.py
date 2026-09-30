@@ -1,5 +1,6 @@
 import csv
 import logging
+import random
 import tarfile
 import urllib.request
 from pathlib import Path
@@ -47,7 +48,6 @@ def sample_stratified_benign(top_n=1000, mid_n=500, tail_n=500) -> list[dict]:
     # Simplified parsing logic: in a real PostgreSQL dump from crates.io,
     # crates.csv has headers like: id, name, downloads, ...
     # We will read them into memory.
-
     crates_by_downloads = []
 
     logger.info("Parsing crates.csv...")
@@ -56,8 +56,8 @@ def sample_stratified_benign(top_n=1000, mid_n=500, tail_n=500) -> list[dict]:
         for row in reader:
             try:
                 downloads = int(row.get("downloads", 0))
-            except (TypeError, ValueError):
-                logger.debug("Skipping row with invalid downloads value: %r", row)
+            except (TypeError, ValueError) as exc:
+                logger.debug("Skipping row with invalid downloads value: %r (%s)", row, exc)
                 continue
 
             crates_by_downloads.append({
