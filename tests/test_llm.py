@@ -1,5 +1,6 @@
 import pytest
 from crateshield.llm.client import classify_with_vote
+import google.genai.errors
 
 @pytest.mark.llm
 def test_llm_classification():
@@ -14,3 +15,5 @@ def test_llm_classification():
             pytest.skip("No GEMINI_API_KEY found, skipping live LLM test")
         else:
             raise
+    except google.genai.errors.ServerError as e:
+        pytest.skip(f"Skipping test due to LLM ServerError (503): {e}")
