@@ -1,0 +1,26 @@
+name: "Create Release"
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Source Archive
+        run: |
+          zip -r crateshield-source.zip src/ analysis/ data/ docs/ README.md requirements.txt pyproject.toml
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: crateshield-source.zip
+          generate_release_notes: true
