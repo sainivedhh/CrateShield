@@ -7,12 +7,18 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy pyproject.toml first so deps are cached in a layer
+COPY pyproject.toml .
+COPY src/ src/
 
-# Install the package
+# Install all declared dependencies via pyproject.toml
+RUN pip install --no-cache-dir -e .
+
+# Copy the rest of the project (data, docs, etc.)
 COPY . .
-RUN pip install -e .
+
+# Pre-build the knowledge base
+RUN python src/crateshield/llm/kb_builder.py || true
 
 # Expose backend port
 EXPOSE 8000
