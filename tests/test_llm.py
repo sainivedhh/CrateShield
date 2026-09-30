@@ -5,7 +5,7 @@ from crateshield.llm.client import classify_with_vote
 def test_llm_classification():
     # This test requires a live GEMINI_API_KEY_1 and network access.
     # It is skipped in CI by using 'pytest -m "not llm"'.
-    prompt = [{"role": "user", "content": "Return a valid JSON classification. Respond with {\"classification\": \"BENIGN\"}"}]
+    prompt = [{"role": "user", "content": 'Return a valid JSON classification. Respond with {"classification": "BENIGN", "confidence": "HIGH", "reasoning": "test", "primary_signals": [], "retrieved_evidence_used": [], "recommended_action": "Pass"}'}]
     try:
         result = classify_with_vote(prompt, votes=1)
         assert result["classification"] in ("BENIGN", "MALICIOUS")
