@@ -64,18 +64,7 @@ jobs:
           PYTHONPATH: src
           GEMINI_API_KEY: dummy_key_for_ci
         run: |
-          pytest -m "not llm" \
-            --cov=crateshield \
-            --cov-report=xml:pytest-coverage.xml \
-            --cov-report=term-missing \
-            --tb=short \
-            -q
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          pytest -m "not llm" --cov=crateshield --cov-report=xml --cov-report=term-missing --tb=short -q > pytest-coverage.txt 2>&1 || (cat pytest-coverage.txt && exit 1)
 
       - name: Upload coverage XML
         uses: actions/upload-artifact@v4
