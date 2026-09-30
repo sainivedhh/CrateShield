@@ -1,9 +1,0 @@
-IssueType,Summary,Description,Priority
-Epic,"Phase 9: Dynamic Analysis Integration","Integrate sandbox environment to analyze runtime behavior of crates.",High
-Story,"Implement seccomp-bpf sandbox","Create an isolated environment using seccomp to execute crate build scripts safely.",High
-Story,"Capture network traffic (pcap)","Monitor and log all outbound network requests during crate execution.",Medium
-Epic,"Phase 10: Semgrep Migration","Replace custom AST extraction with standardized Semgrep rules.",Medium
-Story,"Translate Tree-sitter rules to Semgrep","Rewrite existing AST patterns for network and file I/O into Semgrep YAML syntax.",Medium
-Story,"Integrate Semgrep CLI","Modify pipeline.py to invoke Semgrep instead of custom extractors.",Medium
-Task,"Set up SonarQube in CI","Add SonarQube scanning step to github actions workflow.",High
-Task,"Implement RAG metrics validation","Identify and implement hit-rate and MRR metrics for RAG context retrieval validation.",High
