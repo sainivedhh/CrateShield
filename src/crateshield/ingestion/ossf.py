@@ -25,12 +25,15 @@ def fetch_ossf_crates() -> list[dict]:
         OSSF_RAW_DIR.mkdir(parents=True, exist_ok=True)
         try:
             req = urllib.request.Request(OSSF_REPO_ZIP_URL, headers={'User-Agent': 'Mozilla/5.0'})
+            # Read the repository archive into memory and then open the zip
             with urllib.request.urlopen(req) as response:
-                with zipfile.ZipFile(BytesIO(response.read())) as z:
-                    # Extract only osv/malicious/crates.io/
-                    for file_info in z.infolist():
-                        if "osv/malicious/crates.io/" in file_info.filename and file_info.filename.endswith(".json"):
-                            z.extract(file_info, OSSF_RAW_DIR)
+                content = response.read()
+
+            with zipfile.ZipFile(BytesIO(content)) as z:
+                # Extract only osv/malicious/crates.io/
+                for file_info in z.infolist():
+                    if "osv/malicious/crates.io/" in file_info.filename and file_info.filename.endswith(".json"):
+                        z.extract(file_info, OSSF_RAW_DIR)
         except Exception as e:
             logger.error(f"Failed to fetch OSSF repo: {e}")
             return []
@@ -39,16 +42,16 @@ def fetch_ossf_crates() -> list[dict]:
     # The zip creates a nested structure like malicious-packages-main/osv/malicious/crates.io/...
     for json_file in OSSF_RAW_DIR.rglob("*.json"):
         try:
-            with open(json_file, 'r', encoding='utf-8') as f:
+            with open(json_file, "r", encoding="utf-8") as f:
                 osv_data = json.load(f)
-                
+
             # OSV format has "affected" array
             for affected in osv_data.get("affected", []):
                 pkg = affected.get("package", {})
                 if pkg.get("ecosystem") == "crates.io":
                     name = pkg.get("name")
                     versions = affected.get("versions", [])
-                    
+
                     if name and versions:
                         # Grab the first version listed, or try to find a yanked one
                         version = versions[0]
