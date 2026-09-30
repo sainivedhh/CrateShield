@@ -6,9 +6,17 @@ updates:
       interval: "weekly"
     labels:
       - "dependencies"
+    assignees:
+      - "sainivedhh"
+    reviewers:
+      - "sainivedhh"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
     labels:
       - "dependencies"
+    assignees:
+      - "sainivedhh"
+    reviewers:
+      - "sainivedhh"
