@@ -14,7 +14,6 @@ services:
       - GEMINI_API_KEY_4=${GEMINI_API_KEY_4:-""}
       - GEMINI_API_KEY_5=${GEMINI_API_KEY_5:-""}
     volumes:
-      # Mount data folder to persist caching and results
       - ./data:/app/data
 
   frontend:
@@ -25,3 +24,46 @@ services:
       - "5173:80"
     depends_on:
       - backend
+
+  # ─────────────────────────────────────────────
+  # SonarQube – Static Code Analysis Server
+  # Access: http://localhost:9000  (admin/admin)
+  # ─────────────────────────────────────────────
+  sonarqube:
+    image: sonarqube:community
+    container_name: crateshield-sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_extensions:/opt/sonarqube/extensions
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  # ─────────────────────────────────────────────
+  # SonarScanner – Run analysis against SonarQube
+  # Usage: docker-compose run --rm sonarscanner
+  # ─────────────────────────────────────────────
+  sonarscanner:
+    image: sonarsource/sonar-scanner-cli:latest
+    container_name: crateshield-scanner
+    depends_on:
+      - sonarqube
+    environment:
+      - SONAR_HOST_URL=http://sonarqube:9000
+      - SONAR_LOGIN=${SONAR_TOKEN:-admin}
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src
+    profiles:
+      - scan
+
+volumes:
+  sonarqube_data:
+  sonarqube_logs:
+  sonarqube_extensions:
