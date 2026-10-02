@@ -21,6 +21,7 @@ from crateshield.signals.unsafe_ffi import analyze_unsafe_ffi
 from crateshield.signals.network import analyze_network
 from crateshield.signals.process_execution import analyze_process_execution
 from crateshield.signals.credentials import analyze_credentials
+from crateshield.signals.obfuscation import analyze_obfuscation
 
 logger = logging.getLogger(__name__)
 
@@ -94,4 +95,5 @@ def extract_all_signals(
         "network": analyze_network(files, parser),
         "process": analyze_process_execution(files, parser),
         "credentials": analyze_credentials(files, parser),
+        "obfuscation": analyze_obfuscation(files, parser),
     }

@@ -41,6 +41,15 @@ def _load_models():
         print("[startup] No XGBoost model found — using rules-only scoring")
 
 
+@app.get("/health")
+def health():
+    return {
+        "status": "ok",
+        "model_loaded": _xgb_model is not None,
+        "model_type": "XGBoost" if _xgb_model is not None else None,
+    }
+
+
 @app.get("/api/dataset")
 def get_dataset():
     ds_path = WORK_DIR / "dataset.json"
@@ -135,32 +144,6 @@ def predict(name: str, version: str | None = None):
             ) from exc
 
     risk = assess_risk(signals)
-
-    # Use the already-loaded model (startup), no re-loading per request
-    if _xgb_model is not None:
-        try:
-            X_pred = np.array([extract_features(signals)])
-            probabilities = _xgb_model.predict_proba(X_pred)[0]
-            malicious_index = (
-                list(_xgb_model.classes_).index(1) if 1 in _xgb_model.classes_ else 0
-            )
-            importance_dict = _xgb_model.get_booster().get_score(importance_type="gain")
-            importances = [
-                {"feature": FEATURE_NAMES[int(k[1:])], "importance": float(v)}
-                for k, v in importance_dict.items()
-                if k.startswith("f")
-                and k[1:].isdigit()
-                and int(k[1:]) < len(FEATURE_NAMES)
-            ]
-            risk["model"] = {
-                "malicious_probability": float(probabilities[malicious_index]),
-                "feature_importances": sorted(
-                    importances, key=lambda x: x["importance"], reverse=True
-                ),
-            }
-        except Exception as exc:
-            print(f"Warning: XGBoost inference failed: {exc}")
-
     return {"crate": name, "version": version, "risk": risk, "signals": signals}
 
 

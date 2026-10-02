@@ -95,36 +95,54 @@ def _risk_level(score: float) -> str:
     return "LOW"
 
 
+import xgboost as xgb
+import numpy as np
+
 def assess_risk(signal: dict) -> dict:
-    """Combine the trained RandomForest model (if available) with a transparent
-    rule-based score. Always returns a result, even with no trained model."""
     crate_name = signal.get("crate") or signal.get("metadata", {}).get("name", "")
     known = check_known_incident(crate_name) if crate_name else None
 
     rule_score, contributions = _rule_based_score(signal)
 
     model_result = None
-    model_path = RESULTS_DIR / "rf_model.pkl"
+    model_path = RESULTS_DIR / "xgb_model.json"
     if model_path.exists():
         try:
-            with open(model_path, "rb") as f:
-                rf = pickle.load(f)
-            features = extract_features(signal)
-            proba = rf.predict_proba([features])[0]
-            malicious_idx = list(rf.classes_).index(1) if 1 in rf.classes_ else -1
-            model_score = (
-                float(proba[malicious_idx]) if malicious_idx >= 0 else float(proba[-1])
-            )
-            importances = list(zip(FEATURE_NAMES, rf.feature_importances_.tolist()))
-            importances.sort(key=lambda x: x[1], reverse=True)
+            model = xgb.XGBClassifier()
+            model.load_model(model_path)
+            
+            features = np.array([extract_features(signal)])
+            proba = model.predict_proba(features)[0]
+            malicious_idx = list(model.classes_).index(1) if 1 in model.classes_ else -1
+            model_score = float(proba[malicious_idx]) if malicious_idx >= 0 else float(proba[-1])
+            
+            booster = model.get_booster()
+            
+            # Use built-in SHAP values from XGBoost
+            dmatrix = xgb.DMatrix(features, feature_names=FEATURE_NAMES)
+            shap_values = booster.predict(dmatrix, pred_contribs=True)[0]
+            
+            # The last element is the bias term
+            feature_contributions = shap_values[:-1]
+            
+            # Sort features by absolute contribution to the decision
+            top_indices = np.argsort(np.abs(feature_contributions))[::-1][:3]
+            top_features = []
+            
+            for idx in top_indices:
+                if abs(feature_contributions[idx]) > 0.01:
+                    top_features.append({
+                        "feature": FEATURE_NAMES[idx],
+                        "value": float(features[0][idx]),
+                        "shap_contribution": round(float(feature_contributions[idx]), 3)
+                    })
+
             model_result = {
                 "malicious_probability": round(model_score, 3),
-                "feature_values": dict(zip(FEATURE_NAMES, features)),
-                "feature_importances": [
-                    {"feature": n, "importance": round(i, 3)} for n, i in importances
-                ],
+                "feature_values": dict(zip(FEATURE_NAMES, features[0].tolist())),
+                "top_shap_features": top_features,
             }
-        except Exception:
+        except Exception as e:
             model_result = None
 
     final_score = (
@@ -132,15 +150,28 @@ def assess_risk(signal: dict) -> dict:
         if model_result
         else rule_score
     )
+    
+    risk_level = _risk_level(final_score)
+    
+    # If High or Critical, add explainability
+    explanation = None
+    if risk_level in ["HIGH", "CRITICAL"] and model_result and model_result["top_shap_features"]:
+        explanation = "The model flagged this crate due to the following main factors: "
+        factors = []
+        for feat in model_result["top_shap_features"]:
+            direction = "increased" if feat["shap_contribution"] > 0 else "decreased"
+            factors.append(f"{feat['feature']} (value: {feat['value']}) {direction} the risk score by {abs(feat['shap_contribution'])}")
+        explanation += ", ".join(factors) + "."
 
     result = {
         "risk_score": final_score,
-        "risk_level": _risk_level(final_score),
+        "risk_level": risk_level,
         "source": "model+rules"
         if model_result
         else "rules-only (train the model for higher accuracy)",
         "rule_based": {"score": rule_score, "contributions": contributions},
         "model": model_result,
+        "explanation": explanation,
         "known_incident": None,
     }
 

@@ -58,7 +58,7 @@ def analyze_build_rs(files: dict, parser) -> dict:
         "sensitive_env_reads": [],
         "file_writes": [],
         "process_spawns": [],
-        "flagged_snippets": [],
+        "evidence": [],
         "parse_error": False,
     }
     if not text:
@@ -122,7 +122,12 @@ def analyze_build_rs(files: dict, parser) -> dict:
             hit = True
 
         if hit:
-            result["flagged_snippets"].append(_snippet(src, node))
+            result["evidence"].append({
+                "file": "build.rs",
+                "line_start": node.start_point[0] + 1,
+                "line_end": node.end_point[0] + 1,
+                "snippet": _snippet(src, node)
+            })
 
     result["signals"] = sorted(signals)
     return result

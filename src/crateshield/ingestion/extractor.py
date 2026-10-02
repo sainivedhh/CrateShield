@@ -6,8 +6,11 @@ from pathlib import Path
 from crateshield.config import EXTRACTED_DIR, ensure_dirs
 
 
+MAX_FILES = 10000
+MAX_UNCOMPRESSED_SIZE = 500 * 1024 * 1024  # 500 MB
+
 def extract_crate(tarball: Path, dest_root: Path | None = None) -> Path:
-    """Extract a .crate tarball. Returns the crate root directory."""
+    """Extract a .crate tarball safely. Returns the crate root directory."""
     ensure_dirs()
     dest_root = dest_root or EXTRACTED_DIR
     dest_root.mkdir(parents=True, exist_ok=True)
@@ -16,11 +19,21 @@ def extract_crate(tarball: Path, dest_root: Path | None = None) -> Path:
         members = tf.getmembers()
         if not members:
             raise ValueError(f"empty tarball: {tarball}")
+            
+        if len(members) > MAX_FILES:
+            raise ValueError(f"tarball contains too many files ({len(members)} > {MAX_FILES})")
+            
+        total_size = sum(m.size for m in members if m.isreg())
+        if total_size > MAX_UNCOMPRESSED_SIZE:
+            raise ValueError(f"tarball uncompressed size too large ({total_size} > {MAX_UNCOMPRESSED_SIZE})")
+
         # First path component is `{name}-{version}/`
         top = Path(members[0].name).parts[0]
         out = dest_root / top
+        
         if not out.exists():
             tf.extractall(dest_root, filter="data")
+            
     return dest_root / top
 
 

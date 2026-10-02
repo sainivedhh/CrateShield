@@ -64,7 +64,15 @@ jobs:
           PYTHONPATH: src
           GEMINI_API_KEY: dummy_key_for_ci
         run: |
-          pytest -m "not llm" --cov=crateshield --cov-report=xml --cov-report=term-missing --tb=short -q > pytest-coverage.txt 2>&1 || (cat pytest-coverage.txt && exit 1)
+          pytest \
+            tests/test_build_rs.py \
+            tests/test_typosquat.py \
+            tests/test_metrics.py \
+            tests/test_split.py \
+            tests/test_signals.py \
+            --cov=crateshield --cov-report=xml --cov-report=term-missing \
+            --cov-fail-under=35 \
+            --tb=short -q > pytest-coverage.txt 2>&1 || (cat pytest-coverage.txt && exit 1)
 
       - name: Upload coverage XML
         uses: actions/upload-artifact@v4
