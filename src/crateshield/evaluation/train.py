@@ -3,11 +3,13 @@ import logging
 import pickle
 from pathlib import Path
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import LeaveOneOut, StratifiedKFold, GridSearchCV
+from sklearn.model_selection import LeaveOneOut, StratifiedGroupKFold, GridSearchCV
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
+from sklearn.utils import resample
 import numpy as np
 import pandas as pd
 import xgboost as xgb
+import warnings
 
 from crateshield.config import RESULTS_DIR
 
@@ -48,9 +50,9 @@ def extract_features(signal: dict) -> list[float]:
 
 def _load_dataset(
     dataset_path: Path, signals_dir: Path
-) -> tuple[np.ndarray, np.ndarray, list[str]]:
+) -> tuple[np.ndarray, np.ndarray, list[str], np.ndarray]:
     dataset = json.loads(dataset_path.read_text(encoding="utf-8"))
-    X, y, names = [], [], []
+    X, y, names, groups = [], [], [], []
 
     for crate in dataset.get("crates", []):
         name = crate["name"]
@@ -70,27 +72,51 @@ def _load_dataset(
         X.append(features)
         y.append(1 if label == "MALICIOUS" else 0)
         names.append(f"{name}@{version}")
+        groups.append(name) # Group by crate name
 
-    return np.array(X), np.array(y), names
+    return np.array(X), np.array(y), names, np.array(groups)
 
 
 def _pick_cv(y: np.ndarray):
-    """LOO is only meaningful/affordable while the dataset is tiny. Once we
-    have enough malicious examples per class (synthetic crates push this
-    well past the old ~5-example ceiling), switch to a proper Stratified
-    K-Fold so held-out folds are large enough for precision/recall to mean
-    something, and so GridSearchCV below isn't prohibitively slow."""
-    min_class_count = min(np.bincount(y))
-    if min_class_count >= 10:
+    min_class_count = min(np.bincount(y)) if len(y) > 0 else 0
+    if min_class_count >= 2:
         n_splits = min(5, min_class_count)
-        return StratifiedKFold(
-            n_splits=n_splits, shuffle=True, random_state=42
-        ), f"Stratified {n_splits}-Fold CV"
+        return StratifiedGroupKFold(n_splits=n_splits, shuffle=True, random_state=42), f"StratifiedGroup {n_splits}-Fold CV"
     return LeaveOneOut(), "Leave-One-Out CV"
 
 
+def bootstrap_metrics(y_true, y_pred, n_bootstraps=1000, random_state=42):
+    np.random.seed(random_state)
+    n = len(y_true)
+    metrics = {"precision": [], "recall": [], "f1": [], "fpr": []}
+    
+    for _ in range(n_bootstraps):
+        indices = np.random.randint(0, n, n)
+        y_t = y_true[indices]
+        y_p = y_pred[indices]
+        
+        # Avoid zero division when all bootstrap samples are negative
+        if sum(y_p) > 0:
+            metrics["precision"].append(precision_score(y_t, y_p, zero_division=0))
+        if sum(y_t) > 0:
+            metrics["recall"].append(recall_score(y_t, y_p, zero_division=0))
+            metrics["f1"].append(f1_score(y_t, y_p, zero_division=0))
+            
+        tn, fp, fn, tp = confusion_matrix(y_t, y_p, labels=[0, 1]).ravel()
+        if (fp + tn) > 0:
+            metrics["fpr"].append(fp / (fp + tn))
+            
+    res = {}
+    for k, v in metrics.items():
+        if v:
+            res[k] = (np.mean(v), np.percentile(v, 2.5), np.percentile(v, 97.5))
+        else:
+            res[k] = (0, 0, 0)
+    return res
+
+
 def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
-    X, y, names = _load_dataset(dataset_path, signals_dir)
+    X, y, names, groups = _load_dataset(dataset_path, signals_dir)
 
     if len(np.unique(y)) < 2:
         logger.error("Dataset needs both MALICIOUS and BENIGN examples to train.")
@@ -102,41 +128,57 @@ def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
 
     cv, cv_label = _pick_cv(y)
 
-    # Hyperparameter search instead of fixed defaults -- this is the actual
-    # "training well" part: let the data pick tree depth/count/leaf size
-    # rather than guessing them once and never revisiting.
     param_grid = {
-        "n_estimators": [100, 200, 400],
-        "max_depth": [None, 6, 10],
-        "min_samples_leaf": [1, 2, 4],
+        "n_estimators": [100, 200],
+        "max_depth": [None, 6],
+        "min_samples_leaf": [1, 2],
     }
-    search_cv = (
-        StratifiedKFold(
-            n_splits=min(5, min(np.bincount(y))), shuffle=True, random_state=42
+
+    y_pred = np.zeros_like(y)
+    best_params_list = []
+
+    # Proper nested CV to prevent data leakage from hyperparameter tuning
+    for train_idx, test_idx in cv.split(X, y, groups):
+        X_train, y_train, groups_train = X[train_idx], y[train_idx], groups[train_idx]
+        X_test = X[test_idx]
+        
+        inner_cv_splits = min(3, min(np.bincount(y_train)) if len(y_train) > 0 else 3)
+        inner_cv = StratifiedGroupKFold(n_splits=inner_cv_splits, shuffle=True, random_state=42) if inner_cv_splits >= 2 else 2
+        
+        search = GridSearchCV(
+            RandomForestClassifier(random_state=42, class_weight="balanced"),
+            param_grid,
+            scoring="f1",
+            cv=inner_cv,
+            n_jobs=-1,
         )
-        if min(np.bincount(y)) >= 5
-        else 3
-    )
-    search = GridSearchCV(
+        
+        # Suppress warnings if inner_cv splits have no minority class due to tiny datasets
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            if inner_cv_splits >= 2:
+                search.fit(X_train, y_train, groups=groups_train)
+            else:
+                search.fit(X_train, y_train)
+                
+        best_params_list.append(search.best_params_)
+        
+        rf = RandomForestClassifier(random_state=42, class_weight="balanced", **search.best_params_)
+        rf.fit(X_train, y_train)
+        y_pred[test_idx] = rf.predict(X_test)
+
+    # Train final model on ALL data
+    final_search = GridSearchCV(
         RandomForestClassifier(random_state=42, class_weight="balanced"),
         param_grid,
         scoring="f1",
-        cv=search_cv,
+        cv=cv,
         n_jobs=-1,
     )
-    search.fit(X, y)
-    best_params = search.best_params_
-    logger.info(
-        "RF grid search best params: %s (f1=%.3f)", best_params, search.best_score_
-    )
-
+    final_search.fit(X, y, groups=groups)
+    best_params = final_search.best_params_
+    
     rf = RandomForestClassifier(random_state=42, class_weight="balanced", **best_params)
-    y_pred = np.zeros_like(y)
-
-    for train_idx, test_idx in cv.split(X, y):
-        rf.fit(X[train_idx], y[train_idx])
-        y_pred[test_idx] = rf.predict(X[test_idx])
-
     rf.fit(X, y)
 
     precision = precision_score(y, y_pred, zero_division=0)
@@ -144,14 +186,16 @@ def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
     f1 = f1_score(y, y_pred, zero_division=0)
     tn, fp, fn, tp = confusion_matrix(y, y_pred).ravel()
     fpr = fp / (fp + tn) if (fp + tn) > 0 else 0
+    
+    boot = bootstrap_metrics(y, y_pred)
 
     print("\n" + "=" * 50)
     print(f"Random Forest Evaluation ({cv_label})")
     print("=" * 50)
-    print(f"Best params: {best_params}")
-    print(f"Precision: {precision:.3f}")
-    print(f"Recall:    {recall:.3f}")
-    print(f"F1 Score:  {f1:.3f}")
+    print(f"Best params (final): {best_params}")
+    print(f"Precision: {precision:.3f} (95% CI: {boot['precision'][1]:.3f}-{boot['precision'][2]:.3f})")
+    print(f"Recall:    {recall:.3f} (95% CI: {boot['recall'][1]:.3f}-{boot['recall'][2]:.3f})")
+    print(f"F1 Score:  {f1:.3f} (95% CI: {boot['f1'][1]:.3f}-{boot['f1'][2]:.3f})")
     print(f"FPR:       {fpr:.3f}")
     print("=" * 50)
 
@@ -174,11 +218,12 @@ def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
         "f1": f1,
         "fpr": fpr,
         "best_params": best_params,
+        "bootstrap": boot
     }
 
 
 def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
-    X, y, names = _load_dataset(dataset_path, signals_dir)
+    X, y, names, groups = _load_dataset(dataset_path, signals_dir)
 
     if len(np.unique(y)) < 2:
         logger.error("Dataset needs both MALICIOUS and BENIGN examples to train.")
@@ -191,31 +236,62 @@ def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
     cv, cv_label = _pick_cv(y)
 
     param_grid = {
-        "n_estimators": [100, 150, 250],
-        "max_depth": [3, 4, 5],
-        "learning_rate": [0.05, 0.1, 0.2],
+        "n_estimators": [100, 150],
+        "max_depth": [3, 4],
+        "learning_rate": [0.05, 0.1],
     }
-    search_cv = (
-        StratifiedKFold(
-            n_splits=min(5, min(np.bincount(y))), shuffle=True, random_state=42
+    
+    y_pred = np.zeros_like(y)
+    best_params_list = []
+
+    # Proper nested CV for XGBoost
+    for train_idx, test_idx in cv.split(X, y, groups):
+        X_train, y_train, groups_train = X[train_idx], y[train_idx], groups[train_idx]
+        X_test = X[test_idx]
+        
+        inner_cv_splits = min(3, min(np.bincount(y_train)) if len(y_train) > 0 else 3)
+        inner_cv = StratifiedGroupKFold(n_splits=inner_cv_splits, shuffle=True, random_state=42) if inner_cv_splits >= 2 else 2
+        
+        search = GridSearchCV(
+            xgb.XGBClassifier(
+                scale_pos_weight=scale_pos_weight, eval_metric="logloss", random_state=42
+            ),
+            param_grid,
+            scoring="f1",
+            cv=inner_cv,
+            n_jobs=-1,
         )
-        if min(np.bincount(y)) >= 5
-        else 3
-    )
-    search = GridSearchCV(
+        
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            if inner_cv_splits >= 2:
+                search.fit(X_train, y_train, groups=groups_train)
+            else:
+                search.fit(X_train, y_train)
+                
+        best_params_list.append(search.best_params_)
+        
+        model = xgb.XGBClassifier(
+            scale_pos_weight=scale_pos_weight,
+            eval_metric="logloss",
+            random_state=42,
+            **search.best_params_
+        )
+        model.fit(X_train, y_train)
+        y_pred[test_idx] = model.predict(X_test)
+
+    # Final search on all data
+    final_search = GridSearchCV(
         xgb.XGBClassifier(
             scale_pos_weight=scale_pos_weight, eval_metric="logloss", random_state=42
         ),
         param_grid,
         scoring="f1",
-        cv=search_cv,
+        cv=cv,
         n_jobs=-1,
     )
-    search.fit(X, y)
-    best_params = search.best_params_
-    logger.info(
-        "XGBoost grid search best params: %s (f1=%.3f)", best_params, search.best_score_
-    )
+    final_search.fit(X, y, groups=groups)
+    best_params = final_search.best_params_
 
     model = xgb.XGBClassifier(
         scale_pos_weight=scale_pos_weight,
@@ -223,12 +299,6 @@ def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
         random_state=42,
         **best_params,
     )
-    y_pred = np.zeros_like(y)
-
-    for train_idx, test_idx in cv.split(X, y):
-        model.fit(X[train_idx], y[train_idx])
-        y_pred[test_idx] = model.predict(X[test_idx])
-
     model.fit(X, y)
 
     precision = precision_score(y, y_pred, zero_division=0)
@@ -236,14 +306,16 @@ def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
     f1 = f1_score(y, y_pred, zero_division=0)
     tn, fp, fn, tp = confusion_matrix(y, y_pred).ravel()
     fpr = fp / (fp + tn) if (fp + tn) > 0 else 0
+    
+    boot = bootstrap_metrics(y, y_pred)
 
     print("\n" + "=" * 50)
     print(f"XGBoost Evaluation ({cv_label})")
     print("=" * 50)
-    print(f"Best params: {best_params}")
-    print(f"Precision: {precision:.3f}")
-    print(f"Recall:    {recall:.3f}")
-    print(f"F1 Score:  {f1:.3f}")
+    print(f"Best params (final): {best_params}")
+    print(f"Precision: {precision:.3f} (95% CI: {boot['precision'][1]:.3f}-{boot['precision'][2]:.3f})")
+    print(f"Recall:    {recall:.3f} (95% CI: {boot['recall'][1]:.3f}-{boot['recall'][2]:.3f})")
+    print(f"F1 Score:  {f1:.3f} (95% CI: {boot['f1'][1]:.3f}-{boot['f1'][2]:.3f})")
     print(f"FPR:       {fpr:.3f}")
     print("=" * 50)
 
@@ -268,6 +340,7 @@ def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
         "f1": f1,
         "fpr": fpr,
         "best_params": best_params,
+        "bootstrap": boot
     }
 
 
@@ -409,18 +482,17 @@ def train_severity_xgb(dataset_path: Path, signals_dir: Path) -> dict:
     # Map string severities to integers [0, 1, 2, 3]
     sev_map = {k: i for i, k in enumerate(SEVERITY_LEVELS)}
     y = df["severity"].map(sev_map).values
+    groups = df["name"].values
 
     min_class_count = np.bincount(y).min()
 
-    # Justify fold choice: If min_class_count < 2, StratifiedKFold is impossible.
-    # We will use min_class_count for K if >= 2, bounded to 3 or 5, otherwise LOOCV.
-    from sklearn.model_selection import LeaveOneOut
+    from sklearn.model_selection import LeaveOneOut, StratifiedGroupKFold
 
     if min_class_count >= 2:
         n_splits = min(5, min_class_count)
-        cv = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42)
+        cv = StratifiedGroupKFold(n_splits=n_splits, shuffle=True, random_state=42)
         print(
-            f"\nUsing StratifiedKFold with n_splits={n_splits} (limited by minority class size of {min_class_count})"
+            f"\nUsing StratifiedGroupKFold with n_splits={n_splits} (limited by minority class size of {min_class_count})"
         )
     else:
         cv = LeaveOneOut()
@@ -438,7 +510,7 @@ def train_severity_xgb(dataset_path: Path, signals_dir: Path) -> dict:
     )
     y_pred = np.zeros_like(y)
 
-    for train_idx, test_idx in cv.split(X, y if min_class_count >= 2 else None):
+    for train_idx, test_idx in cv.split(X, y if min_class_count >= 2 else None, groups=groups if min_class_count >= 2 else None):
         model.fit(X[train_idx], y[train_idx])
         y_pred[test_idx] = model.predict(X[test_idx])
 

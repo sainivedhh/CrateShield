@@ -1,5 +1,3 @@
-
-
 services:
   backend:
     build:
@@ -56,7 +54,7 @@ services:
       - sonarqube
     environment:
       - SONAR_HOST_URL=http://sonarqube:9000
-      - SONAR_LOGIN=${SONAR_TOKEN:-admin}
+      - SONAR_TOKEN=${SONAR_TOKEN}
     volumes:
       - .:/usr/src
     working_dir: /usr/src
