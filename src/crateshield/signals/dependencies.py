@@ -21,16 +21,21 @@ def analyze_dependencies(files: dict) -> dict:
 
     suspicious = []
     evidence = []
-    
+
     for dep in deps:
-        if any(bad in dep.lower() for bad in ("pastebin", "discord", "ngrok", "localtunnel")):
+        if any(
+            bad in dep.lower()
+            for bad in ("pastebin", "discord", "ngrok", "localtunnel")
+        ):
             suspicious.append(dep)
-            evidence.append({
-                "file": "Cargo.toml",
-                "line_start": 1,
-                "line_end": 1,
-                "snippet": f"{dep} = ..."
-            })
+            evidence.append(
+                {
+                    "file": "Cargo.toml",
+                    "line_start": 1,
+                    "line_end": 1,
+                    "snippet": f"{dep} = ...",
+                }
+            )
 
     return {
         "count": len(deps),

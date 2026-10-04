@@ -85,10 +85,14 @@ def build_prompt(
     if raw_source is not None:
         user += "Raw source (truncated):\n" + raw_source[:2000] + "\n"
     else:
-        user += "Crate signals (structured):\n" + json.dumps(safe_signals, indent=2) + "\n"
+        user += (
+            "Crate signals (structured):\n" + json.dumps(safe_signals, indent=2) + "\n"
+        )
         if snippets:
             trimmed = [s[:300] for s in snippets[:5]]
-            user += "\nFlagged snippets (max 5, 300 chars each):\n" + "\n---\n".join(trimmed)
+            user += "\nFlagged snippets (max 5, 300 chars each):\n" + "\n---\n".join(
+                trimmed
+            )
 
     if retrieved_context:
         user += "\n\nRelevant historical context (Known Incidents):\n"

@@ -477,11 +477,12 @@ def build_full_dataset(dest: Path, benign_count: int = 2000) -> dict:
 
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(dataset, indent=2), encoding="utf-8")
-    
+
     from crateshield.evaluation.split import split_dataset
+
     split_dataset(dest)
-    
+
     with open(dest, "r", encoding="utf-8") as f:
         dataset = json.load(f)
-        
+
     return dataset

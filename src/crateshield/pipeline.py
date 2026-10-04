@@ -47,10 +47,18 @@ def analyze_crate(
     signals = extract_only(name, version, work_dir)
     # Collect evidence snippets from all signal families
     snippets = []
-    for family_key in ("build_rs", "unsafe_ffi", "network", "proc_macro", "obfuscation"):
+    for family_key in (
+        "build_rs",
+        "unsafe_ffi",
+        "network",
+        "proc_macro",
+        "obfuscation",
+    ):
         for ev in (signals.get(family_key) or {}).get("evidence") or []:
             if isinstance(ev, dict):
-                snippets.append(f"[{ev.get('file', '?')}:{ev.get('line_start', '?')}]\n{ev.get('snippet', '')}")
+                snippets.append(
+                    f"[{ev.get('file', '?')}:{ev.get('line_start', '?')}]\n{ev.get('snippet', '')}"
+                )
             elif isinstance(ev, str):
                 snippets.append(ev)
     try:

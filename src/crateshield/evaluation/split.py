@@ -3,11 +3,17 @@ import logging
 import random
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
-def split_dataset(dataset_path: Path, val_ratio: float = 0.15, test_ratio: float = 0.15, seed: int = 42):
+
+def split_dataset(
+    dataset_path: Path,
+    val_ratio: float = 0.15,
+    test_ratio: float = 0.15,
+    seed: int = 42,
+):
     """
     Deduplicates crates and splits the dataset into train, val, and test splits by crate NAME.
     This ensures that different versions of the same crate do not appear in different splits.
@@ -21,9 +27,9 @@ def split_dataset(dataset_path: Path, val_ratio: float = 0.15, test_ratio: float
 
     with open(dataset_path, "r", encoding="utf-8") as f:
         dataset = json.load(f)
-        
+
     crates = dataset.get("crates", [])
-    
+
     # Deduplicate by name and version
     seen = set()
     deduped = []
@@ -32,39 +38,39 @@ def split_dataset(dataset_path: Path, val_ratio: float = 0.15, test_ratio: float
         if key not in seen:
             seen.add(key)
             deduped.append(c)
-            
+
     # Group by crate NAME
-    groups: Dict[str, List[Any]] = defaultdict(list)
+    groups: dict[str, list[Any]] = defaultdict(list)
     for c in deduped:
         groups[c.get("name")].append(c)
-        
+
     # Group names and stratify by majority label of the group to preserve label distribution
     group_majority_label = {}
     for name, items in groups.items():
         labels = [c.get("label") for c in items]
         majority = max(set(labels), key=labels.count)
         group_majority_label[name] = majority
-        
-    strata: Dict[str, List[str]] = defaultdict(list)
+
+    strata: dict[str, list[str]] = defaultdict(list)
     for name, label in group_majority_label.items():
         strata[label].append(name)
-        
+
     for name, items in groups.items():
         # sort by publish date if available, here we just sort by version string
         items.sort(key=lambda x: x.get("version", ""))
-        
+
     train_names, val_names, test_names = set(), set(), set()
-    
+
     for label, names in strata.items():
         random.shuffle(names)
         n = len(names)
         n_test = int(n * test_ratio)
         n_val = int(n * val_ratio)
-        
+
         test_names.update(names[:n_test])
         val_names.update(names[n_test : n_test + n_val])
         train_names.update(names[n_test + n_val :])
-        
+
     for c in deduped:
         name = c.get("name")
         if name in test_names:
@@ -73,15 +79,19 @@ def split_dataset(dataset_path: Path, val_ratio: float = 0.15, test_ratio: float
             c["split"] = "val"
         else:
             c["split"] = "train"
-            
+
     dataset["crates"] = deduped
-    
+
     with open(dataset_path, "w", encoding="utf-8") as f:
         json.dump(dataset, f, indent=2)
-        
-    logger.info(f"Split complete. Train: {len(train_names)} groups, Val: {len(val_names)} groups, Test: {len(test_names)} groups.")
+
+    logger.info(
+        f"Split complete. Train: {len(train_names)} groups, Val: {len(val_names)} groups, Test: {len(test_names)} groups."
+    )
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     from crateshield.config import WORK_DIR
+
     split_dataset(WORK_DIR / "dataset.json")

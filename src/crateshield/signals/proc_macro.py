@@ -17,9 +17,9 @@ def analyze_proc_macro(files: dict) -> dict:
     is_pm = bool(re.search(r"proc-macro\s*=\s*true", toml))
     suspicious: list[str] = []
     evidence = []
-    
+
     if is_pm:
-        for p in (files.get("source_files") or []):
+        for p in files.get("source_files") or []:
             text = p.read_text(encoding="utf-8", errors="replace")
             lines = text.splitlines()
             for i, line in enumerate(lines):
@@ -32,13 +32,15 @@ def analyze_proc_macro(files: dict) -> dict:
                             start = max(0, i - pad)
                             end = min(len(lines), i + pad + 1)
                             snippet = "\n".join(lines[start:end])
-                            evidence.append({
-                                "file": str(p.name),
-                                "line_start": i + 1,
-                                "line_end": i + 1,
-                                "snippet": snippet
-                            })
-                            
+                            evidence.append(
+                                {
+                                    "file": str(p.name),
+                                    "line_start": i + 1,
+                                    "line_end": i + 1,
+                                    "snippet": snippet,
+                                }
+                            )
+
     return {
         "is_proc_macro": is_pm,
         "proc_macro_suspicious_imports": suspicious,

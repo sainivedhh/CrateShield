@@ -19,6 +19,7 @@ def _snippet(src: bytes, node, pad: int = 2) -> str:
     end = min(len(lines), node.end_point[0] + pad + 1)
     return "\n".join(lines[start:end])
 
+
 def analyze_unsafe_ffi(files: dict, parser) -> dict:
     paths: list[Path] = files.get("source_files") or []
     unsafe_blocks = 0
@@ -54,12 +55,14 @@ def analyze_unsafe_ffi(files: dict, parser) -> dict:
                     syscalls.append(name)
                     hit = True
             if hit and len(evidence) < 50:
-                evidence.append({
-                    "file": str(path.name),
-                    "line_start": node.start_point[0] + 1,
-                    "line_end": node.end_point[0] + 1,
-                    "snippet": _snippet(src, node)
-                })
+                evidence.append(
+                    {
+                        "file": str(path.name),
+                        "line_start": node.start_point[0] + 1,
+                        "line_end": node.end_point[0] + 1,
+                        "snippet": _snippet(src, node),
+                    }
+                )
 
     kloc = max(loc / 1000.0, 0.001)
     return {

@@ -72,7 +72,7 @@ def _load_dataset(
         X.append(features)
         y.append(1 if label == "MALICIOUS" else 0)
         names.append(f"{name}@{version}")
-        groups.append(name) # Group by crate name
+        groups.append(name)  # Group by crate name
 
     return np.array(X), np.array(y), names, np.array(groups)
 
@@ -81,7 +81,9 @@ def _pick_cv(y: np.ndarray):
     min_class_count = min(np.bincount(y)) if len(y) > 0 else 0
     if min_class_count >= 2:
         n_splits = min(5, min_class_count)
-        return StratifiedGroupKFold(n_splits=n_splits, shuffle=True, random_state=42), f"StratifiedGroup {n_splits}-Fold CV"
+        return StratifiedGroupKFold(
+            n_splits=n_splits, shuffle=True, random_state=42
+        ), f"StratifiedGroup {n_splits}-Fold CV"
     return LeaveOneOut(), "Leave-One-Out CV"
 
 
@@ -89,23 +91,23 @@ def bootstrap_metrics(y_true, y_pred, n_bootstraps=1000, random_state=42):
     np.random.seed(random_state)
     n = len(y_true)
     metrics = {"precision": [], "recall": [], "f1": [], "fpr": []}
-    
+
     for _ in range(n_bootstraps):
         indices = np.random.randint(0, n, n)
         y_t = y_true[indices]
         y_p = y_pred[indices]
-        
+
         # Avoid zero division when all bootstrap samples are negative
         if sum(y_p) > 0:
             metrics["precision"].append(precision_score(y_t, y_p, zero_division=0))
         if sum(y_t) > 0:
             metrics["recall"].append(recall_score(y_t, y_p, zero_division=0))
             metrics["f1"].append(f1_score(y_t, y_p, zero_division=0))
-            
+
         tn, fp, fn, tp = confusion_matrix(y_t, y_p, labels=[0, 1]).ravel()
         if (fp + tn) > 0:
             metrics["fpr"].append(fp / (fp + tn))
-            
+
     res = {}
     for k, v in metrics.items():
         if v:
@@ -141,10 +143,16 @@ def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
     for train_idx, test_idx in cv.split(X, y, groups):
         X_train, y_train, groups_train = X[train_idx], y[train_idx], groups[train_idx]
         X_test = X[test_idx]
-        
+
         inner_cv_splits = min(3, min(np.bincount(y_train)) if len(y_train) > 0 else 3)
-        inner_cv = StratifiedGroupKFold(n_splits=inner_cv_splits, shuffle=True, random_state=42) if inner_cv_splits >= 2 else 2
-        
+        inner_cv = (
+            StratifiedGroupKFold(
+                n_splits=inner_cv_splits, shuffle=True, random_state=42
+            )
+            if inner_cv_splits >= 2
+            else 2
+        )
+
         search = GridSearchCV(
             RandomForestClassifier(random_state=42, class_weight="balanced"),
             param_grid,
@@ -152,7 +160,7 @@ def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
             cv=inner_cv,
             n_jobs=-1,
         )
-        
+
         # Suppress warnings if inner_cv splits have no minority class due to tiny datasets
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
@@ -160,10 +168,12 @@ def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
                 search.fit(X_train, y_train, groups=groups_train)
             else:
                 search.fit(X_train, y_train)
-                
+
         best_params_list.append(search.best_params_)
-        
-        rf = RandomForestClassifier(random_state=42, class_weight="balanced", **search.best_params_)
+
+        rf = RandomForestClassifier(
+            random_state=42, class_weight="balanced", **search.best_params_
+        )
         rf.fit(X_train, y_train)
         y_pred[test_idx] = rf.predict(X_test)
 
@@ -177,7 +187,7 @@ def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
     )
     final_search.fit(X, y, groups=groups)
     best_params = final_search.best_params_
-    
+
     rf = RandomForestClassifier(random_state=42, class_weight="balanced", **best_params)
     rf.fit(X, y)
 
@@ -186,15 +196,19 @@ def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
     f1 = f1_score(y, y_pred, zero_division=0)
     tn, fp, fn, tp = confusion_matrix(y, y_pred).ravel()
     fpr = fp / (fp + tn) if (fp + tn) > 0 else 0
-    
+
     boot = bootstrap_metrics(y, y_pred)
 
     print("\n" + "=" * 50)
     print(f"Random Forest Evaluation ({cv_label})")
     print("=" * 50)
     print(f"Best params (final): {best_params}")
-    print(f"Precision: {precision:.3f} (95% CI: {boot['precision'][1]:.3f}-{boot['precision'][2]:.3f})")
-    print(f"Recall:    {recall:.3f} (95% CI: {boot['recall'][1]:.3f}-{boot['recall'][2]:.3f})")
+    print(
+        f"Precision: {precision:.3f} (95% CI: {boot['precision'][1]:.3f}-{boot['precision'][2]:.3f})"
+    )
+    print(
+        f"Recall:    {recall:.3f} (95% CI: {boot['recall'][1]:.3f}-{boot['recall'][2]:.3f})"
+    )
     print(f"F1 Score:  {f1:.3f} (95% CI: {boot['f1'][1]:.3f}-{boot['f1'][2]:.3f})")
     print(f"FPR:       {fpr:.3f}")
     print("=" * 50)
@@ -218,7 +232,7 @@ def train_and_evaluate(dataset_path: Path, signals_dir: Path) -> dict:
         "f1": f1,
         "fpr": fpr,
         "best_params": best_params,
-        "bootstrap": boot
+        "bootstrap": boot,
     }
 
 
@@ -240,7 +254,7 @@ def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
         "max_depth": [3, 4],
         "learning_rate": [0.05, 0.1],
     }
-    
+
     y_pred = np.zeros_like(y)
     best_params_list = []
 
@@ -248,34 +262,42 @@ def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
     for train_idx, test_idx in cv.split(X, y, groups):
         X_train, y_train, groups_train = X[train_idx], y[train_idx], groups[train_idx]
         X_test = X[test_idx]
-        
+
         inner_cv_splits = min(3, min(np.bincount(y_train)) if len(y_train) > 0 else 3)
-        inner_cv = StratifiedGroupKFold(n_splits=inner_cv_splits, shuffle=True, random_state=42) if inner_cv_splits >= 2 else 2
-        
+        inner_cv = (
+            StratifiedGroupKFold(
+                n_splits=inner_cv_splits, shuffle=True, random_state=42
+            )
+            if inner_cv_splits >= 2
+            else 2
+        )
+
         search = GridSearchCV(
             xgb.XGBClassifier(
-                scale_pos_weight=scale_pos_weight, eval_metric="logloss", random_state=42
+                scale_pos_weight=scale_pos_weight,
+                eval_metric="logloss",
+                random_state=42,
             ),
             param_grid,
             scoring="f1",
             cv=inner_cv,
             n_jobs=-1,
         )
-        
+
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             if inner_cv_splits >= 2:
                 search.fit(X_train, y_train, groups=groups_train)
             else:
                 search.fit(X_train, y_train)
-                
+
         best_params_list.append(search.best_params_)
-        
+
         model = xgb.XGBClassifier(
             scale_pos_weight=scale_pos_weight,
             eval_metric="logloss",
             random_state=42,
-            **search.best_params_
+            **search.best_params_,
         )
         model.fit(X_train, y_train)
         y_pred[test_idx] = model.predict(X_test)
@@ -306,15 +328,19 @@ def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
     f1 = f1_score(y, y_pred, zero_division=0)
     tn, fp, fn, tp = confusion_matrix(y, y_pred).ravel()
     fpr = fp / (fp + tn) if (fp + tn) > 0 else 0
-    
+
     boot = bootstrap_metrics(y, y_pred)
 
     print("\n" + "=" * 50)
     print(f"XGBoost Evaluation ({cv_label})")
     print("=" * 50)
     print(f"Best params (final): {best_params}")
-    print(f"Precision: {precision:.3f} (95% CI: {boot['precision'][1]:.3f}-{boot['precision'][2]:.3f})")
-    print(f"Recall:    {recall:.3f} (95% CI: {boot['recall'][1]:.3f}-{boot['recall'][2]:.3f})")
+    print(
+        f"Precision: {precision:.3f} (95% CI: {boot['precision'][1]:.3f}-{boot['precision'][2]:.3f})"
+    )
+    print(
+        f"Recall:    {recall:.3f} (95% CI: {boot['recall'][1]:.3f}-{boot['recall'][2]:.3f})"
+    )
     print(f"F1 Score:  {f1:.3f} (95% CI: {boot['f1'][1]:.3f}-{boot['f1'][2]:.3f})")
     print(f"FPR:       {fpr:.3f}")
     print("=" * 50)
@@ -340,7 +366,7 @@ def train_and_evaluate_xgb(dataset_path: Path, signals_dir: Path) -> dict:
         "f1": f1,
         "fpr": fpr,
         "best_params": best_params,
-        "bootstrap": boot
+        "bootstrap": boot,
     }
 
 
@@ -510,7 +536,11 @@ def train_severity_xgb(dataset_path: Path, signals_dir: Path) -> dict:
     )
     y_pred = np.zeros_like(y)
 
-    for train_idx, test_idx in cv.split(X, y if min_class_count >= 2 else None, groups=groups if min_class_count >= 2 else None):
+    for train_idx, test_idx in cv.split(
+        X,
+        y if min_class_count >= 2 else None,
+        groups=groups if min_class_count >= 2 else None,
+    ):
         model.fit(X[train_idx], y[train_idx])
         y_pred[test_idx] = model.predict(X[test_idx])
 

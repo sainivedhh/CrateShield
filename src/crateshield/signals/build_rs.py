@@ -122,12 +122,14 @@ def analyze_build_rs(files: dict, parser) -> dict:
             hit = True
 
         if hit:
-            result["evidence"].append({
-                "file": "build.rs",
-                "line_start": node.start_point[0] + 1,
-                "line_end": node.end_point[0] + 1,
-                "snippet": _snippet(src, node)
-            })
+            result["evidence"].append(
+                {
+                    "file": "build.rs",
+                    "line_start": node.start_point[0] + 1,
+                    "line_end": node.end_point[0] + 1,
+                    "snippet": _snippet(src, node),
+                }
+            )
 
     result["signals"] = sorted(signals)
     return result
