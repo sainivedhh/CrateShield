@@ -42,8 +42,19 @@ def analyze_unsafe_ffi(files: dict, parser) -> dict:
                 unsafe_blocks += 1
                 hit = True
             if node.type in {"function_item", "function_signature_item"}:
-                # `unsafe fn`
-                if any(c.type == "unsafe" for c in node.children):
+                # `unsafe fn` — the 'unsafe' keyword is nested inside a
+                # 'function_modifiers' child, not a direct child of the item.
+                def _has_unsafe(children):
+                    for c in children:
+                        if c.type == "unsafe":
+                            return True
+                        if c.type == "function_modifiers" and any(
+                            gc.type == "unsafe" for gc in c.children
+                        ):
+                            return True
+                    return False
+
+                if _has_unsafe(node.children):
                     unsafe_fns += 1
                     hit = True
             if node.type == "extern_modifier" or node.type == "foreign_mod_item":

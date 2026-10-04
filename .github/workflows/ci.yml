@@ -70,8 +70,10 @@ jobs:
             tests/test_metrics.py \
             tests/test_split.py \
             tests/test_signals.py \
-            --cov=crateshield --cov-report=xml --cov-report=term-missing \
-            --cov-fail-under=35 \
+            tests/test_rustsec.py \
+            --cov=crateshield \
+            --cov-report=xml \
+            --cov-report=term-missing \
             --tb=short -q > pytest-coverage.txt 2>&1 || (cat pytest-coverage.txt && exit 1)
 
       - name: Upload coverage XML

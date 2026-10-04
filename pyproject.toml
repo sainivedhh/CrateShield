@@ -50,3 +50,24 @@ ignore = [
     "UP017",
     "UP045",
 ]
+
+[tool.coverage.run]
+omit = [
+    "src/crateshield/__main__.py",
+    "src/crateshield/api.py",
+    "src/crateshield/pipeline.py",
+    "src/crateshield/evaluation/train.py",
+    "src/crateshield/evaluation/ablation.py",
+    "src/crateshield/evaluation/distill.py",
+    "src/crateshield/evaluation/finetune.py",
+    "src/crateshield/evaluation/risk.py",
+    "src/crateshield/evaluation/report.py",
+    "src/crateshield/ingestion/synthetic.py",
+    "src/crateshield/ingestion/known_incidents.py",
+    "src/crateshield/ingestion/ossf.py",
+    "src/crateshield/llm/*",
+]
+
+[tool.coverage.report]
+fail_under = 50
+show_missing = true

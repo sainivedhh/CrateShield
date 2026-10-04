@@ -60,11 +60,11 @@ def analyze_obfuscation(files: dict, parser) -> dict:
                         high_entropy_strings.append(s[:50] + "...")
                         hit = True
 
-                    if len(s) > 32 and base64_regex.match(s):
-                        base64_blobs.append(s[:50] + "...")
-                        hit = True
-                    elif len(s) > 32 and hex_regex.match(s):
+                    if len(s) > 32 and hex_regex.match(s):
                         hex_blobs.append(s[:50] + "...")
+                        hit = True
+                    elif len(s) > 32 and base64_regex.match(s):
+                        base64_blobs.append(s[:50] + "...")
                         hit = True
 
             # Detect string concatenation or macro building
