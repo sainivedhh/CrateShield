@@ -20,7 +20,7 @@ jobs:
           zip -r crateshield-source.zip src/ analysis/ data/ docs/ README.md requirements.txt pyproject.toml
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: crateshield-source.zip
           generate_release_notes: true
